@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Capital: System and Suffering</title>
+	</head>
+	<body>
+		<main id='society'>
+			<h1><i>Capital</i></h1>
+			<h2>Day {{day}} &middot; {{population.length}} humans &middot; Total labour: {{LabourPowerTotal|£}} / Avg: {{LabourPowerSocAvgUnit|£}} &middot; {{commodities.toFixed(0)}} surplus commodities</h2>
+
+			<div class='population'>
+				<div v-for="person in populationOrdered"><i>{{person.LabourPowerIndividual.toFixed(2)}}</i> working for {{person.hoursWorked.toFixed(2)}} hours - {{person.name}}</div>
+			</div>
+		</main>
+
+		<script src='jquery.js'></script>
+		<script src='lodash.js'></script>
+		<script src='accounting.js'></script>
+		<script src='vue.js'></script>
+		<script src='capital_data.js'></script>
+		<script src='capital_helpers.js'></script>
+		<script src='capital_models.js'></script>
+		<script src='capital_logic.js'></script>
+	</body>
+</html>
