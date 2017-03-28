@@ -3,15 +3,22 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Capital: System and Suffering</title>
+		<link rel='stylesheet' href='tachyons.css' />
 	</head>
 	<body>
-		<main id='society'>
-			<h1><i>Capital</i></h1>
-			<h2>Day {{day}} &middot; {{population.length}} humans &middot; Total labour: {{LabourPowerTotal|£}} / Avg: {{LabourPowerSocAvgUnit|£}} &middot; {{commodities.toFixed(0)}} surplus commodities</h2>
-
-			<div class='population'>
-				<div v-for="person in populationOrdered"><i>{{person.LabourPowerIndividual.toFixed(2)}}</i> working for {{person.hoursWorked.toFixed(2)}} hours - {{person.name}}</div>
-			</div>
+		<main id='society' class='pv4 w-two-thirds center'>
+			<h2><i>Capital</i> Day {{day}}</h2>
+			<div class='f3'>{{population.length}} humans</div>
+			<div class='f3'>Total labour: {{LabourPowerTotal|£}} / Avg: {{LabourPowerSocAvgUnit|£}}</div>
+			<div class='f3'>{{commodities.toFixed(0)}} surplus commodities</div>
+			<br>
+			<table class='population'>
+				<tr v-for="person in populationOrdered">
+					<td>(<b>{{person.LabourPowerIndividual.toFixed(2)}}</b> labour power,</td>
+					<td>working <b>{{person.hoursWorked.toFixed(2)}} hrs</b> to meet the market rate)</td>
+					<th class='tl'>{{person.name}}</th>
+				</tr>
+			</table>
 		</main>
 
 		<script src='jquery.js'></script>
