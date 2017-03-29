@@ -54,7 +54,7 @@ var Society = new Vue({
 						'{{name}} was killed by a deadly killer bees! D:',
 						'{{name}} drowned in a flood of frogs! D:',
 						'{{name}} was eaten by a swarm of locusts! D:',
-					]);
+					]));
 				}
 			})
 		}
