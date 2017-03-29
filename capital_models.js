@@ -1,3 +1,5 @@
+_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+
 var Society = new Vue({
 	el: '#society',
 	data: {
@@ -37,16 +39,25 @@ var Society = new Vue({
 			_.forEach(Society.population, function(person) {
 				person.live();
 			});
+
+			if(_.random(0,100) < 0.00001) {
+				this.catastrophe();
+			}
 		},
-		// catastrophe: function() {
-		// 	if(_.random(0,100) < 0.0001) {
-		// 		_.(this.population).each(function(pop) {
-		// 			if(_.random(0,100) < _.random(0,100)) {
-		// 				pop.die();
-		// 			}
-		// 		})
-		// 	}
-		// }
+		catastrophe: function() {
+			console.log("We're all gonna die!")
+			_(this.population).each(function(pop) {
+				if(_.random(0,100) < _.random(0,100)) {
+					pop.die(_.sample([
+						'{{name}} was killed by a terrible earthquake! D:',
+						'{{name}} was killed by deadly Zika virus! D:',
+						'{{name}} was killed by a deadly killer bees! D:',
+						'{{name}} drowned in a flood of frogs! D:',
+						'{{name}} was eaten by a swarm of locusts! D:',
+					]);
+				}
+			})
+		}
 	}
 });
 
@@ -93,7 +104,7 @@ var Human = Vue.extend({
 
 			if(this.age >= Society.adultAge && _.random(0,100) < 0.05) { // Eureka!
 				prodInc = 0.1
-				console.log(this.name+": \"Eureka!\"")
+				// console.log(this.name+": \"Eureka!\"")
 			} else {
 				prodInc = 0.01
 			}
@@ -116,31 +127,29 @@ var Human = Vue.extend({
 					if(x.generation > 3 && _.random(0,100) < 50) {
 						x.lastname = this.lastname;
 					}
-					console.log(this.name+" gave had child no."+this.Noffspring+": "+x.firstname+"! :)")
+					// console.log(this.name+" gave had child no."+this.Noffspring+": "+x.firstname+"! :)")
 					Society.population.push(x);
 				}
 			}
 		},
-		die: function() {
+		die: function(reason) {
 			var index = Society.population.indexOf(this);
 			if(index != -1) Society.population.splice(index, 1);
+			console.log(_.template(reason)(this));
 		},
 		live: function() {
 			// Die chance
 			if(_.random(0,100) < Society.chanceOfDeath) { // Natural causes
-				console.log(this.name+" died unexpectedly! :o")
-				this.die();
+				this.die("{{name}} died unexpectedly :o");
 			} else // Starvation
 			if(Society.commodities <= 0) {
 				if(_.random(0,100) < 10) {
-					console.log(this.name+" died of starvation :(")
-					this.die();
+					this.die("{{name}} died of starvation :(");
 				}
 			} else // Old age
 			if(this.age > Society.lifeExpectancy) {
 				if(_.random(0,100) < 10) {
-					console.log(this.name+" died naturally at the old age of "+this.age)
-					this.die();
+					this.die("{{name}} died naturally at the old age of {{age}}");
 				}
 			} else {
 				this.age++;
