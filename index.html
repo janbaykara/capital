@@ -32,7 +32,7 @@
 			<!-- * GINI coefficient -->
 			<br>
 			<table class='population'>
-				<tr v-for="person in populationOrdered"
+				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
 					v-bind:class="{ highlighted: person.isHighlighted }">
 					<td>(<b>{{person.LabourPowerIndividual.toFixed(2)}}</b> labour power,</td>

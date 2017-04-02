@@ -48,7 +48,7 @@ var Society = new Vue({
 		LabourPowerSocAvgUnit: function() { // value of commodity
 			return _.meanBy(this.population, 'LabourPowerIndividual');
 		},
-		populationOrdered: function() {
+		currentPopulation: function() {
 			return _(this.population).filter('alive').orderBy(['wallet'], ['desc']).value();
 		}
 	},
@@ -62,7 +62,7 @@ var Society = new Vue({
 		newDay: function() {
 			this.day++;
 
-			_.forEach(Society.population, function(person) {
+			_(this.currentPopulation).forEach(function(person) {
 				person.live();
 			});
 
@@ -178,9 +178,10 @@ var Human = Vue.extend({
 		die: function(reason) {
 			// Inheritance to offspring
 			var parent = this;
-			var inheritance = parent.wallet / parent.offspring.length;
+			var livingChildren = _(parent.offspring).filter('alive').value();
+			var inheritance = parent.wallet / livingChildren.length;
 			if(inheritance > 0) {
-				_(this.offspring).filter('alive').forEach(function(child) {
+				livingChildren.forEach(function(child) {
 					child.wallet += inheritance;
 					console.log(child.name+" received an inheritance of £"+inheritance.toFixed(2)+" from their parent, "+parent.name);
 				});
@@ -191,6 +192,8 @@ var Human = Vue.extend({
 			console.log(_.template(reason)(this));
 		},
 		live: function() {
+			if(!this.alive) { return false; }
+
 			// Die chance
 			if(_.random(0,100) < Society.chanceOfRandomDeath) {
 				this.die("{{name}} died unexpectedly :o");
