@@ -8,12 +8,15 @@
 			.highlighted > * {
 				background: yellow;
 			}
+			.hungry > * {
+				color: red !important;
+			}
 		</style>
 	</head>
 	<body>
 		<main id='society' class='pv4 ph6 center'>
 			<h2><i>Capital</i> Day {{day}}</h2>
-			<div class='f3'>{{population.length}} humans (average age of {{averageAge.toFixed(0)}})</div>
+			<div class='f3'>{{currentPopulation.length}} humans (average age of {{averageAge.toFixed(0)}})</div>
 			<div class='f3'>Total labour: {{LabourPowerTotal|£}} / Avg: {{LabourPowerSocAvgUnit|£}}</div>
 			<div class='f3'>{{commodities.toFixed(0)}} surplus commodities</div>
 			<div class='f3'>{{averageWealth|£}} average wealth</div>
@@ -34,13 +37,14 @@
 			<table class='population'>
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
-					v-bind:class="{ highlighted: person.isHighlighted }">
-					<td>(<b>{{person.LabourPowerIndividual.toFixed(2)}}</b> labour power,</td>
-					<td>working <b>{{person.hoursWorked.toFixed(2)}} hrs</b> to survive)</td>
-					<td class='tr'>Hunger: <b>{{person.hunger.toFixed(2)}}</b></td>
-					<td class='tr'>Wallet: <b>{{person.wallet|£}}</b></td>
+					v-bind:class="{ highlighted: person.isHighlighted }"
+					v-bind:class="{ hungry: person.hunger > 0 }">
+					<td><b>{{person.LabourPowerIndividual.toFixed(2)}}</b> labour,</td>
+					<td>working <b>{{person.hoursWorked.toFixed(2)}} hrs</b> to survive</td>
+					<td class='tr'><b>{{person.hunger.toFixed(2)}} hunger</b></td>
+					<td class='tr'>has <b>{{person.wallet|£}}</b></td>
 					<td>{{person.firstname}} <b>{{person.lastname}}</b>
-					<td>(Gen {{person.generation}}) <b>{{person.age}}</b> yrs old</td>
+					<td>(Gen {{person.generation}}) aged <b>{{person.age}}</b></td>
 				</tr>
 			</table>
 		</main>
