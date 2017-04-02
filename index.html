@@ -4,19 +4,43 @@
 		<meta charset="utf-8">
 		<title>Capital: System and Suffering</title>
 		<link rel='stylesheet' href='tachyons.css' />
+		<style>
+			.highlighted > * {
+				background: yellow;
+			}
+		</style>
 	</head>
 	<body>
-		<main id='society' class='pv4 w-two-thirds center'>
+		<main id='society' class='pv4 ph6 center'>
 			<h2><i>Capital</i> Day {{day}}</h2>
 			<div class='f3'>{{population.length}} humans (average age of {{averageAge.toFixed(0)}})</div>
 			<div class='f3'>Total labour: {{LabourPowerTotal|£}} / Avg: {{LabourPowerSocAvgUnit|£}}</div>
 			<div class='f3'>{{commodities.toFixed(0)}} surplus commodities</div>
+			<div class='f3'>{{averageWealth|£}} average wealth</div>
+			<br>
+			<!-- D3 charts for: -->
+			<!-- * population growth -->
+			<!-- * Life expectancy -->
+			<!-- * Life expectancy by wealth at death -->
+			<!-- * GDP growth -->
+			<!-- * GDP per capita -->
+			<!-- * Avg personal wealth -->
+			<!-- * Wealth by age -->
+			<!-- * Wealth by skill -->
+			<!-- * Wealth by hunger -->
+			<!-- * Productivity growth -->
+			<!-- * GINI coefficient -->
 			<br>
 			<table class='population'>
-				<tr v-for="person in populationOrdered">
+				<tr v-for="person in populationOrdered"
+					v-on:click="person.isHighlighted = !person.isHighlighted"
+					v-bind:class="{ highlighted: person.isHighlighted }">
 					<td>(<b>{{person.LabourPowerIndividual.toFixed(2)}}</b> labour power,</td>
-					<td>working <b>{{person.hoursWorked.toFixed(2)}} hrs</b> to meet the market rate)</td>
-					<td class='tl'><b>{{person.name}}</b> (Aged <b>{{person.age}}</b>) (Gen {{person.generation}})</td>
+					<td>working <b>{{person.hoursWorked.toFixed(2)}} hrs</b> to survive)</td>
+					<td class='tr'>Hunger: <b>{{person.hunger.toFixed(2)}}</b></td>
+					<td class='tr'>Wallet: <b>{{person.wallet|£}}</b></td>
+					<td>{{person.firstname}} <b>{{person.lastname}}</b>
+					<td>(Gen {{person.generation}}) <b>{{person.age}}</b> yrs old</td>
 				</tr>
 			</table>
 		</main>
