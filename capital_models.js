@@ -31,7 +31,8 @@ var Society = new Vue({
 		menopause: 55,
 		lifeExpectancy: 75,
 		chanceOfConception: 10,
-		chanceOfDeath: 0.1,
+		chanceOfRandomDeath: 0,
+		chanceOfCatastrophe: 0,
 		babyFood: 0.5
 	},
 	computed: {
@@ -48,7 +49,7 @@ var Society = new Vue({
 			return _.meanBy(this.population, 'LabourPowerIndividual');
 		},
 		populationOrdered: function() {
-			return _.orderBy(this.population, ['wallet'], ['desc']);
+			return _(this.population).filter('alive').orderBy(['wallet'], ['desc']).value();
 		}
 	},
 	created: function() {
@@ -65,9 +66,9 @@ var Society = new Vue({
 				person.live();
 			});
 
-			// if(_.random(0,100) < 0.00001) {
-			// 	this.catastrophe();
-			// }
+			if(_.random(0,100) < this.chanceOfCatastrophe) {
+				this.catastrophe();
+			}
 		},
 		catastrophe: function() {
 			console.log("We're all gonna die!")
@@ -90,7 +91,7 @@ var Human = Vue.extend({
 	data: function() {
 		return {
 			age: 0,
-			health: 100,
+			alive: true,
 			hunger: 0,
 			wallet: 0,
 			generation: 0,
@@ -179,20 +180,19 @@ var Human = Vue.extend({
 			var parent = this;
 			var inheritance = parent.wallet / parent.offspring.length;
 			if(inheritance > 0) {
-				_.forEach(this.offspring, function(child) {
+				_(this.offspring).filter('alive').forEach(function(child) {
 					child.wallet += inheritance;
 					console.log(child.name+" received an inheritance of £"+inheritance.toFixed(2)+" from their parent, "+parent.name);
 				});
 			}
 
 			// Death
-			var index = Society.population.indexOf(this);
-			if(index != -1) Society.population.splice(index, 1);
+			this.alive = false;
 			console.log(_.template(reason)(this));
 		},
 		live: function() {
 			// Die chance
-			if(_.random(0,100) < Society.chanceOfDeath) {
+			if(_.random(0,100) < Society.chanceOfRandomDeath) {
 				this.die("{{name}} died unexpectedly :o");
 			} else // Starvation
 			if(this.hunger >= 50 && _.random(0,100) < 30) {
