@@ -1,0 +1,15 @@
+.highlighted > * {
+	background: yellow !important;
+}
+
+.hungry > .hunger b {
+	color: red !important;
+}
+
+.lazy > .LabourPowerIndividual b {
+	color: red !important;
+}
+
+.poor > .wallet b {
+	color: red !important;
+}

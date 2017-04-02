@@ -28,6 +28,7 @@ var Society = new Vue({
 		commodities: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
+		tickSpeed: 500
 	},
 	computed: {
 		currentPopulation: function() {
@@ -50,7 +51,7 @@ var Society = new Vue({
 		// And everyday after...
 		setInterval(function() {
 			Society.newDay();
-		}, 200);
+		}, this.tickSpeed);
 	},
 	methods: {
 		newDay: function() {

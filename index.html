@@ -4,14 +4,7 @@
 		<meta charset="utf-8">
 		<title>Capital: System and Suffering</title>
 		<link rel='stylesheet' href='tachyons.css' />
-		<style>
-			.highlighted > * {
-				background: yellow;
-			}
-			.hungry > * {
-				color: red !important;
-			}
-		</style>
+		<link rel='stylesheet' href='capital.css' />
 	</head>
 	<body>
 		<main id='society' class='pv4 ph6 center'>
@@ -37,14 +30,13 @@
 			<table class='population'>
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
-					v-bind:class="{ highlighted: person.isHighlighted }"
-					v-bind:class="{ hungry: person.hunger > 0 }">
-					<td><b>{{person.LabourPowerIndividual.toFixed(2)}}</b> labour,</td>
-					<td>working <b>{{person.hoursWorked.toFixed(2)}} hrs</b> to survive</td>
-					<td class='tr'><b>{{person.hunger.toFixed(2)}} hunger</b></td>
-					<td class='tr'>has <b>{{person.wallet|£}}</b></td>
-					<td>{{person.firstname}} <b>{{person.lastname}}</b>
-					<td>(Gen {{person.generation}}) aged <b>{{person.age}}</b></td>
+					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0, lazy: person.LabourPowerIndividual < LabourPowerSocAvgUnit, poor: person.wallet < 0.01 }">
+					<td class='LabourPowerIndividual'><b>{{person.LabourPowerIndividual.toFixed(2)}} labour</b>,</td>
+					<td class='hoursWorked'>working <b>{{person.hoursWorked.toFixed(2)}} hours</b></td>
+					<td class='tr hunger'><b>{{person.hunger.toFixed(2)}} hunger</b></td>
+					<td class='tr wallet'>has <b>{{person.wallet|£}}</b></td>
+					<td class='name'>{{person.firstname}} <b>{{person.lastname}}</b>
+					<td class='age'>(Gen {{person.generation}}) aged <b>{{person.age}}</b></td>
 				</tr>
 			</table>
 		</main>
