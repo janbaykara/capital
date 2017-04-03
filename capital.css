@@ -1,3 +1,11 @@
+.population {
+	color: #888;
+}
+
+.population b {
+	color: #555;
+}
+
 .highlighted > * {
 	background: yellow !important;
 }
@@ -12,4 +20,12 @@
 
 .poor > .wallet b {
 	color: red !important;
+}
+
+.young > .age b {
+	color: blue !important;
+}
+
+.old > .age b {
+	color: orange !important;
 }

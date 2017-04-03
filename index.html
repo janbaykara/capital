@@ -30,13 +30,13 @@
 			<table class='population'>
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
-					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0, lazy: person.LabourPowerIndividual < LabourPowerSocAvgUnit, poor: person.wallet < 0.01 }">
+					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0, lazy: person.LabourPowerIndividual < LabourPowerSocAvgUnit, poor: person.wallet < 0.01, young: person.age < person.ageAdult, old: person.age >= person.ageElderly }">
 					<td class='LabourPowerIndividual'><b>{{person.LabourPowerIndividual.toFixed(2)}} labour</b>,</td>
 					<td class='hoursWorked'>working <b>{{person.hoursWorked.toFixed(2)}} hours</b></td>
 					<td class='tr hunger'><b>{{person.hunger.toFixed(0)}}% hungry</b></td>
 					<td class='tr wallet'>has <b>{{person.wallet|£}}</b></td>
 					<td class='name'>{{person.firstname}} <b>{{person.lastname}}</b>
-					<td class='age'>(Gen {{person.generation}}) aged <b>{{person.age}}</b></td>
+					<td class='age'>(Gen {{person.generation}}) <b>aged {{person.age}}</b></td>
 				</tr>
 			</table>
 		</main>
