@@ -84,7 +84,7 @@ var Human = Vue.extend({
 				// if(x.generation > 3 && _.random(0,100) < 50) {
 					x.lastname = this.lastname;
 				// }
-				x.wallet = this.babyFood * this.ageAdult; // Stipend so they can get food til' working age
+				x.wallet = this.babyFood * (this.ageAdult-1); // Stipend so they can get food til' working age
 				this.offspring.push(x);
 				Society.population.push(x);
 				console.log(this.name+" gave had child no."+this.offspring.length+": "+x.firstname+"! :)")
