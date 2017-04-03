@@ -33,7 +33,7 @@
 					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0, lazy: person.LabourPowerIndividual < LabourPowerSocAvgUnit, poor: person.wallet < 0.01 }">
 					<td class='LabourPowerIndividual'><b>{{person.LabourPowerIndividual.toFixed(2)}} labour</b>,</td>
 					<td class='hoursWorked'>working <b>{{person.hoursWorked.toFixed(2)}} hours</b></td>
-					<td class='tr hunger'><b>{{person.hunger.toFixed(2)}} hunger</b></td>
+					<td class='tr hunger'><b>{{person.hunger.toFixed(0)}}% hungry</b></td>
 					<td class='tr wallet'>has <b>{{person.wallet|£}}</b></td>
 					<td class='name'>{{person.firstname}} <b>{{person.lastname}}</b>
 					<td class='age'>(Gen {{person.generation}}) aged <b>{{person.age}}</b></td>
@@ -45,8 +45,9 @@
 		<script src='lodash.js'></script>
 		<script src='accounting.js'></script>
 		<script src='vue.js'></script>
-		<script src='capital_data.js'></script>
 		<script src='capital_helpers.js'></script>
-		<script src='capital_models.js'></script>
+		<script src='capital_society.js'></script>
+		<script src='capital_human.js'></script>
+		<script src='capital.js'></script>
 	</body>
 </html>

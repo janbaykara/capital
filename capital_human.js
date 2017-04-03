@@ -1,87 +1,3 @@
-_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-
-/*
-
-#Ideas: politics?
-- Inheritance tax
-- Income tax
-- Working age laws (lower,upper)
-- Fiscal laws (redistribution of food/commodities?)
-- Minimum/maximum wage or prices?
-- Healthcare policies?
-- Education policies?
-- Food/care/pension for babies and old people?
-
-# Ideas: diversify goods?
-
-# Ideas: institutions
-- Political groups
-- Families
-- Genders
-
-*/
-
-var Society = new Vue({
-	el: '#society',
-	data: {
-		population: [],
-		commodities: 0,
-		day: 0,
-		chanceOfCatastrophe: 0,
-		tickSpeed: 500
-	},
-	computed: {
-		currentPopulation: function() {
-			return _(this.population).filter('alive').orderBy(['wallet'], ['desc']).value();
-		},
-		averageAge: function() {
-			return _.meanBy(this.currentPopulation, 'age');
-		},
-		averageWealth: function() {
-			return _.meanBy(this.currentPopulation, 'wallet');
-		},
-		LabourPowerTotal: function() {
-			return _.sumBy(this.currentPopulation, 'LabourPowerIndividual');
-		},
-		LabourPowerSocAvgUnit: function() { // value of commodity
-			return _.meanBy(this.currentPopulation, 'LabourPowerIndividual');
-		}
-	},
-	created: function() {
-		// And everyday after...
-		setInterval(function() {
-			Society.newDay();
-		}, this.tickSpeed);
-	},
-	methods: {
-		newDay: function() {
-			Society.day++;
-
-			Society.currentPopulation.forEach(function(person) {
-				person.live();
-			});
-
-			if(_.random(0,100) < Society.chanceOfCatastrophe) {
-				Society.catastrophe();
-			}
-		},
-		catastrophe: function() {
-			console.log("We're all gonna die!")
-			Society.currentPopulation.forEach(function(person) {
-				if(_.random(0,100) < _.random(0,100)) {
-					person.die(_.sample([
-						'{{name}} was killed by a terrible earthquake! D:',
-						'{{name}} was killed by deadly Zika virus! D:',
-						'{{name}} was killed by a deadly killer bees! D:',
-						'{{name}} drowned in a flood of frogs! D:',
-						'{{name}} was eaten by a swarm of locusts! D:',
-					]));
-				}
-			})
-		}
-	}
-});
-
 var Human = Vue.extend({
 	data: function() {
 		return {
@@ -98,23 +14,23 @@ var Human = Vue.extend({
 			ageAdult: 16,
 			ageInfertility: 55,
 			ageElderly: 75,
-			chanceOfConception: 10,
+			chanceOfConception: 5,
 			chanceOfRandomDeath: 0,
-			hungerThreshold: 10,
-			babyFood: 0.5
+			hungerThreshold: 100,
+			babyFood: 5
 		};
 	},
 	computed: {
 		name: function() { return this.firstname+" "+this.lastname; },
 		hoursWorked: function() {
-			return Society.LabourPowerSocAvgUnit / this.LabourPowerIndividual;
+			return (Society.LabourPowerSocAvgUnit / this.LabourPowerIndividual) * Society.hoursWorkingDay;
 		}
 	},
 	methods: {
 		produce: function() {
 			// # Incentive to beat the competition to market
 			if(this.age >= this.ageAdult) {
-				this.wallet += this.LabourPowerIndividual;
+				this.wallet += this.LabourPowerIndividual * this.hoursWorked;
 				Society.commodities += this.LabourPowerIndividual * this.hoursWorked;
 				this.hunger += this.hoursWorked;
 			} else {
@@ -164,17 +80,15 @@ var Human = Vue.extend({
 				&& this.age >= (this.ageAdult * _.random(0.8,1.2))
 				&& this.age < (this.ageInfertility * _.random(0.8,1.2))
 			) {
-				if(_.random(0,100) < this.chanceOfConception) {
-					var x = new Human();
-					x.generation = this.generation + 1;
-					// if(x.generation > 3 && _.random(0,100) < 50) {
-						x.lastname = this.lastname;
-					// }
-					x.wallet = this.babyFood * this.ageAdult; // Stipend so they can get food til' working age
-					this.offspring.push(x);
-					Society.population.push(x);
-					console.log(this.name+" gave had child no."+this.offspring.length+": "+x.firstname+"! :)")
-				}
+				var x = new Human();
+				x.generation = this.generation + 1;
+				// if(x.generation > 3 && _.random(0,100) < 50) {
+					x.lastname = this.lastname;
+				// }
+				x.wallet = this.babyFood * this.ageAdult; // Stipend so they can get food til' working age
+				this.offspring.push(x);
+				Society.population.push(x);
+				console.log(this.name+" gave had child no."+this.offspring.length+": "+x.firstname+"! :)")
 			}
 		},
 		die: function(reason) {
@@ -213,7 +127,8 @@ var Human = Vue.extend({
 				this.improve();
 
 				// Reproduce chance
-				if( (Society.commodities/Society.currentPopulation.length) >= this.ageAdult ) {
+				if( (Society.commodities/Society.currentPopulation.length) >= this.ageAdult
+				&& _.random(0,100) < this.chanceOfConception ) {
 					this.reproduce();
 				}
 
@@ -222,12 +137,3 @@ var Human = Vue.extend({
 		}
 	}
 });
-
-
-// In the beginning...
-for(var i = 1, x = 20; i <= x; i++) {
-	var thisBaby = new Human();
-	thisBaby.age = _.random(thisBaby.ageAdult, 50);
-	Society.population.push(thisBaby);
-	Society.commodities = Society.averageAge * thisBaby.ageAdult;
-}
