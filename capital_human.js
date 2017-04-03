@@ -75,8 +75,7 @@ var Human = Vue.extend({
 		// # Reproduce, based on commodities available, to a limit
 		reproduce: function() {
 			if(
-				(Society.commodities/Society.currentPopulation.length) >= this.ageAdult
-				&& Society.currentPopulation.length >= 2
+				Society.workingPopulation.length >= 2
 				&& this.age >= (this.ageAdult * _.random(0.8,1.2))
 				&& this.age < (this.ageInfertility * _.random(0.8,1.2))
 			) {

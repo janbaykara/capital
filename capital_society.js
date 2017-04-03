@@ -5,24 +5,27 @@ var Society = new Vue({
 		commodities: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 3000,
+		tickSpeed: 500,
 		hoursWorkingDay: 10
 	},
 	computed: {
 		currentPopulation: function() {
 			return _(this.population).filter('alive').orderBy(['wallet'], ['desc']).value();
 		},
+		workingPopulation: function() {
+			return _(this.currentPopulation).filter((p)=>p.age >= p.ageAdult).orderBy(['wallet'], ['desc']).value();
+		},
 		averageAge: function() {
 			return _.meanBy(this.currentPopulation, 'age');
 		},
 		averageWealth: function() {
-			return _.meanBy(this.currentPopulation, 'wallet');
+			return _.meanBy(this.workingPopulation, 'wallet');
 		},
 		LabourPowerTotal: function() {
-			return _.sumBy(this.currentPopulation, 'LabourPowerIndividual');
+			return _.sumBy(this.workingPopulation, 'LabourPowerIndividual');
 		},
 		LabourPowerSocAvgUnit: function() { // value of commodity
-			return _.meanBy(this.currentPopulation, 'LabourPowerIndividual');
+			return _.meanBy(this.workingPopulation, 'LabourPowerIndividual');
 		}
 	},
 	created: function() {
