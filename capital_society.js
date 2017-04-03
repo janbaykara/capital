@@ -5,7 +5,7 @@ var Society = new Vue({
 		commodities: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 500,
+		tickSpeed: 200,
 		hoursWorkingDay: 10
 	},
 	computed: {
