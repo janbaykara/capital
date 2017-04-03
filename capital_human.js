@@ -44,10 +44,10 @@ var Human = Vue.extend({
 				var foodRequired = this.babyFood;
 			}
 
-			if(this.wallet >= foodRequired && this.wallet > 0) {
+			if(Society.commodities >= foodRequired && this.wallet >= foodRequired) {
 				var foodAcquired = this.hunger;
 			} else
-			if(this.wallet > 0) {
+			if(Society.commodities >= this.wallet && this.wallet > 0) {
 				var foodAcquired = this.wallet;
 			} else {
 				var foodAcquired = 0;
