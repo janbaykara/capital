@@ -9,11 +9,13 @@
 	<body>
 		<main id='society' class='pv4 ph6 center'>
 			<h2><i>Capital</i> Day {{day}}</h2>
-			<div class='f3'>{{currentPopulation.length}} humans (average age of {{averageAge.toFixed(0)}})</div>
-			<div class='f3'>Total labour: {{LabourPowerTotal|£}} / Avg: {{LabourPowerSocAvgUnit|£}}</div>
-			<div class='f3'>{{commodities.toFixed(0)}} surplus commodities</div>
-			<div class='f3'>{{averageWealth|£}} average wealth</div>
-			<br>
+			<div class='f3 w-50 fl-l'>{{currentPopulation.length}} humans (average age of {{averageAge.toFixed(0)}})</div>
+			<div class='f3 w-50 fl-l'>{{averageWealth|£}} average wealth</div>
+			<div class='f3 w-50 fl-l'>{{LabourPowerTotal|£}} total labour</div>
+			<div class='f3 w-50 fl-l'>{{LabourPowerSocAvgUnit|£}} labour unit value</div>
+			<div class='f3 w-50 fl-l'>{{commodities.toFixed(0)}} surplus commodities</div>
+			<div class='f3 w-50 fl-l'>{{averageHunger.toFixed(1)}}% average hunger</div>
+			<br style='float: none; clear: both'>
 			<!-- D3 charts for: -->
 			<!-- * population growth -->
 			<!-- * Life expectancy -->

@@ -21,6 +21,9 @@ var Society = new Vue({
 		averageWealth: function() {
 			return _.meanBy(this.workingPopulation, 'wallet');
 		},
+		averageHunger: function() {
+			return _.meanBy(this.workingPopulation, 'hunger');
+		},
 		LabourPowerTotal: function() {
 			return _.sumBy(this.workingPopulation, 'LabourPowerIndividual');
 		},
