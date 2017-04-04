@@ -14,6 +14,7 @@
 			<div class='f3'>{{LabourPowerSocAvgUnit|£}} labour unit value</div>
 			<div class='f4'>{{commodities.toFixed(0)}} surplus commodities</div>
 			<div class='f4'>{{averageWealth|£}} average wealth</div>
+			<div class='f4'>{{averageWorkingDay|hrs}} average working hours
 			<div class='f4'>{{averageHunger.toFixed(1)}}% average hunger</div>
 			<br>
 			<!-- D3 charts for: -->
@@ -28,14 +29,15 @@
 			<!-- * Wealth by hunger -->
 			<!-- * Productivity growth -->
 			<!-- * GINI coefficient -->
-			<table class='population'>
+			<table class='population f6'>
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
 					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0, lazy: person.LabourPowerIndividual < LabourPowerSocAvgUnit, poor: person.wallet < 0.01, young: person.age < person.ageAdult, old: person.age >= person.ageElderly }">
 					<td class='LabourPowerIndividual'><b>{{person.LabourPowerIndividual.toFixed(2)}} labour</b>,</td>
-					<td class='hoursWorked'>working <b>{{person.hoursWorked.toFixed(2)}} hours</b></td>
+					<td class='hoursWorked'>working <b>{{person.hoursWorked|hrs}} hours,</b></td>
+					<td class='tr wallet'>earns <b>{{person.dailyWage|£}}</b></td>
+					<td class='tr wallet'>and has <b>{{person.wallet|£}}</b></td>
 					<td class='tr hunger'><b>{{person.hunger.toFixed(0)}}% hungry</b></td>
-					<td class='tr wallet'>has <b>{{person.wallet|£}}</b></td>
 					<td class='name'>{{person.firstname}} <b>{{person.lastname}}</b>
 					<td class='age'>(Gen {{person.generation}}) <b>aged {{person.age}}</b></td>
 				</tr>

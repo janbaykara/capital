@@ -5,15 +5,16 @@ var Society = new Vue({
 		commodities: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 200,
-		hoursWorkingDay: 10
+		tickSpeed: 1000,
+		hoursWorkingDay: 10,
+		lifecycle: false
 	},
 	computed: {
 		currentPopulation: function() {
-			return _(this.population).filter('alive').orderBy(['wallet'], ['desc']).value();
+			return _(this.population).filter('alive').orderBy(['LabourPowerIndividual'], ['desc']).value();
 		},
 		workingPopulation: function() {
-			return _(this.currentPopulation).filter((p)=>p.age >= p.ageAdult).orderBy(['wallet'], ['desc']).value();
+			return _(this.currentPopulation).filter((p)=>p.age >= p.ageAdult).value();
 		},
 		averageAge: function() {
 			return _.meanBy(this.currentPopulation, 'age');
@@ -23,6 +24,9 @@ var Society = new Vue({
 		},
 		averageHunger: function() {
 			return _.meanBy(this.workingPopulation, 'hunger');
+		},
+		averageWorkingDay: function() {
+			return _.meanBy(this.workingPopulation, 'hoursWorked');
 		},
 		LabourPowerTotal: function() {
 			return _.sumBy(this.workingPopulation, 'LabourPowerIndividual');

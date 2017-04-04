@@ -11,7 +11,7 @@ var Human = Vue.extend({
 			firstname: _.sample(firstnames),
 			lastname: _.sample(lastnames),
 			LabourPowerIndividual: Society.LabourPowerSocAvgUnit * _.random(0.75,1.25) || 1,
-			ageAdult: 16,
+			ageAdult: Society.lifecycle ? 16 : 0,
 			ageInfertility: 55,
 			ageElderly: 75,
 			chanceOfConception: 5,
@@ -24,14 +24,20 @@ var Human = Vue.extend({
 		name: function() { return this.firstname+" "+this.lastname; },
 		hoursWorked: function() {
 			return (Society.LabourPowerSocAvgUnit / this.LabourPowerIndividual) * Society.hoursWorkingDay;
+		},
+		dailyProduct: function() {
+			return this.LabourPowerIndividual * this.hoursWorked;
+		},
+		dailyWage: function() {
+			return this.dailyProduct * this.LabourPowerSocAvgUnit;
 		}
 	},
 	methods: {
 		produce: function() {
 			// # Incentive to beat the competition to market
 			if(this.age >= this.ageAdult) {
-				this.wallet += this.LabourPowerIndividual * this.hoursWorked;
-				Society.commodities += this.LabourPowerIndividual * this.hoursWorked;
+				this.wallet += this.dailyWage;
+				Society.commodities += this.dailyProduct;
 				this.hunger += this.hoursWorked;
 			} else {
 				this.hunger += this.babyFood; // Baby stomach
@@ -45,17 +51,20 @@ var Human = Vue.extend({
 			}
 
 			if(Society.commodities >= foodRequired && this.wallet >= foodRequired) {
+				console.log(this.name+" can afford food")
 				var foodAcquired = this.hunger;
 			} else
 			if(Society.commodities >= this.wallet && this.wallet > 0) {
+				console.log(this.name+" might afford SOME food")
 				var foodAcquired = this.wallet;
 			} else {
+				console.log(this.name+" is fuckt")
 				var foodAcquired = 0;
 			}
 
 			Society.commodities -= foodAcquired;
 			this.hunger -= foodAcquired;
-			this.wallet -= foodAcquired;
+			this.wallet -= foodAcquired; // # We need to talk in terms of value and exchange-value, not in terms of commodity 'units' (meaningless)
 		},
 		improve: function() {
 			// # Overproducers should be able to improve easier (£ investment)
@@ -74,6 +83,8 @@ var Human = Vue.extend({
 		},
 		// # Reproduce, based on commodities available, to a limit
 		reproduce: function() {
+			if(!Society.lifecycle) return false;
+
 			if(
 				Society.workingPopulation.length >= 2
 				&& this.age >= (this.ageAdult * _.random(0.8,1.2))
@@ -91,6 +102,8 @@ var Human = Vue.extend({
 			}
 		},
 		die: function(reason) {
+			if(!Society.lifecycle) return false;
+
 			// Inheritance to offspring
 			var parent = this;
 			var livingChildren = _(parent.offspring).filter('alive').value();

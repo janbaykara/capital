@@ -5,6 +5,13 @@ Vue.filter('£', function (value) {
     return accounting.formatMoney(value, "£")
 });
 
+Vue.filter('hrs', function (value) {
+  var date = new Date(value * 3600 /* sec per hr */
+                           * 1000 /* msec per sec */);
+  return ('0' + date.getUTCHours()  ).slice(-2) + ':' +
+         ('0' + date.getUTCMinutes()).slice(-2);
+});
+
 //https://www.babycenter.com/top-baby-names-2014.htm
 var firstnames = ["Sophia","Jackson","Emma","Aiden","Olivia","Liam","Ava","Lucas","Isabella","Noah","Mia","Mason","Zoe","Ethan","Lily","Caden","Emily","Jacob","Madelyn","Logan","Madison","Jayden","Chloe","Elijah","Charlotte","Jack","Aubrey","Luke","Avery","Michael","Abigail","Benjamin","Kaylee","Alexander","Layla","James","Harper","Jayce","Ella","Caleb","Amelia","Connor","Arianna","William","Riley","Carter","Aria","Ryan","Hailey","Oliver","Hannah","Matthew","Aaliyah","Daniel","Evelyn","Gabriel","Addison","Henry","Mackenzie","Owen","Adalyn","Grayson","Ellie","Dylan","Brooklyn","Landon","Nora","Isaac","Scarlett","Nicholas","Grace","Wyatt","Anna","Nathan","Isabelle","Andrew","Natalie","Cameron","Kaitlyn","Dominic","Lillian","Joshua","Sarah","Eli","Audrey","Sebastian","Elizabeth","Hunter","Leah","Brayden","Annabelle","David","Kylie","Samuel","Mila","Evan","Claire","Gavin","Victoria","Christian"];
 
