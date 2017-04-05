@@ -17,51 +17,56 @@ var Human = Vue.extend({
 			chanceOfConception: 5,
 			chanceOfRandomDeath: 0,
 			hungerThreshold: 100,
-			babyFood: 5
+			hoursInDay: 12,
+			adultFoodAvg: 12,
+			babyFoodAvg: 6
 		};
 	},
 	computed: {
 		name: function() { return this.firstname+" "+this.lastname; },
 		hoursWorked: function() {
-			return Society.hoursWorkingDay; // Now, refer this to food requirements, max time available
+			if(Society.equalHours) {
+				return this.hoursInDay;
+			} else {
+				return Math.min(this.hoursInDay, (Society.commodityPrice * this.adultFoodAvg) / this.hourlyRelativeProduct); // Now, refer this to food requirements, max time available
+			}
+		},
+		hourlyRelativeProduct: function() {
+			return this.LabourPowerIndividual / Society.LabourPowerSocAvgUnit;
 		},
 		dailyProduct: function() {
 			return this.hoursWorked * this.LabourPowerIndividual;
 		},
 		dailyWage: function() {
-			return this.dailyProduct / Society.dailyProductAvg;
+			return this.hourlyRelativeProduct * this.hoursWorked;
 		}
 	},
 	methods: {
 		produce: function() {
 			// # Incentive to beat the competition to market
 			if(this.age >= this.ageAdult) {
-				this.wallet += this.dailyWage;
+				this.wallet += this.hourlyRelativeProduct * this.hoursWorked; // Share of today's social wealth (combined congealed labour of society)
 				Society.commodities += this.dailyProduct;
-				this.hunger++;
+				this.hunger += this.adultFoodAvg;
 			} else {
-				this.hunger += this.babyFood; // Baby stomach
+				this.hunger += this.babyFoodAvg; // Baby stomach
 			}
 		},
 		consume: function () {
-			if(this.age >= this.ageAdult) {
-				var foodRequired = this.hunger;
-			} else {
-				var foodRequired = this.babyFood;
-			}
+			var priceOfFoodNeeded = this.hunger * Society.commodityPrice;
 
-			if(Society.commodities >= foodRequired && this.wallet >= foodRequired) {
+			if(Society.commodities >= this.hunger && this.wallet >= priceOfFoodNeeded) {
 				var foodAcquired = this.hunger;
 			} else
 			if(Society.commodities >= this.wallet && this.wallet > 0) {
-				var foodAcquired = this.wallet;
+				var foodAcquired = (this.wallet/priceOfFoodNeeded) * this.hunger;
 			} else {
 				var foodAcquired = 0;
 			}
 
 			Society.commodities -= foodAcquired;
 			this.hunger -= foodAcquired;
-			this.wallet -= foodAcquired; // # We need to talk in terms of value and exchange-value, not in terms of commodity 'units' (meaningless)
+			this.wallet -= foodAcquired * Society.commodityPrice; // # We need to talk in terms of value and exchange-value, not in terms of commodity 'units' (meaningless)
 		},
 		improve: function() {
 			// # Overproducers should be able to improve easier (£ investment)
@@ -92,7 +97,7 @@ var Human = Vue.extend({
 				// if(x.generation > 3 && _.random(0,100) < 50) {
 					x.lastname = this.lastname;
 				// }
-				x.wallet = this.babyFood * (this.ageAdult-1); // Stipend so they can get food til' working age
+				x.wallet = this.babyFoodAvg * (this.ageAdult-1); // Stipend so they can get food til' working age
 				this.offspring.push(x);
 				Society.population.push(x);
 				console.log(this.name+" gave had child no."+this.offspring.length+": "+x.firstname+"! :)")
@@ -102,14 +107,16 @@ var Human = Vue.extend({
 			if(!Society.lifecycle) return false;
 
 			// Inheritance to offspring
-			var parent = this;
-			var livingChildren = _(parent.offspring).filter('alive').value();
-			var inheritance = parent.wallet / livingChildren.length;
-			if(inheritance > 0) {
-				livingChildren.forEach(function(child) {
-					child.wallet += inheritance;
-					console.log(child.name+" received an inheritance of £"+inheritance.toFixed(2)+" from their parent, "+parent.name);
-				});
+			if(Society.inheritance) {
+				var parent = this;
+				var livingChildren = _(parent.offspring).filter('alive').value();
+				var inheritance = parent.wallet / livingChildren.length;
+				if(inheritance > 0) {
+					livingChildren.forEach(function(child) {
+						child.wallet += inheritance;
+						console.log(child.name+" received an inheritance of £"+inheritance.toFixed(2)+" from their parent, "+parent.name);
+					});
+				}
 			}
 
 			// Death

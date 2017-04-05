@@ -5,9 +5,10 @@ var Society = new Vue({
 		commodities: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 100,
-		hoursWorkingDay: 10,
-		lifecycle: false
+		tickSpeed: 200,
+		lifecycle: true,
+		inheritance: false,
+		equalHours: false
 	},
 	computed: {
 		currentPopulation: function() {
@@ -39,6 +40,9 @@ var Society = new Vue({
 		},
 		dailyProductAvg: function() {
 			return _.meanBy(this.workingPopulation, 'dailyProduct');
+		},
+		commodityPrice: function() {
+			return this.LabourPowerSocAvgUnit;
 		}
 	},
 	created: function() {

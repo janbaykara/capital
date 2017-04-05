@@ -7,15 +7,18 @@
 		<link rel='stylesheet' href='capital.css' />
 	</head>
 	<body>
-		<main id='society' class='pv4 ph6 center'>
+		<main id='society' class='pv4 ph5 center'>
 			<h2><i>Capital</i> Day {{day}}</h2>
-			<div class='f3'>{{currentPopulation.length}} humans (average age of {{averageAge|d(0)}})</div>
-			<div class='f3 fl w-50'>{{LabourPowerTotal|£}} total labour</div>
-			<div class='f3 fl w-50'>{{LabourPowerSocAvgUnit|£}} labour unit value</div>
-			<div class='f3 fl w-50'>{{dailyProductTotal|d(1)}} total production</div>
+			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age of {{averageAge|d(0)}})</span></div>
+			<br>
+			<div class='f3 fl w-50'>{{LabourPowerSocAvgUnit|£}} social price of labour/commodity unit</div>
+			<div class='f3 fl w-50'>{{LabourPowerTotal|£}} GDP</div>
 			<div class='f3 fl w-50'>{{dailyProductAvg|d(1)}} avg person production</div>
-			<div class='f4 fl w-50'>{{averageWealth|£}} average wealth accumulated</div>
+			<div class='f3 fl w-50'>{{dailyProductTotal|d(1)}} daily labour units</div>
+			<br style='clear: both; float: none'>
+			<br>
 			<div class='f4 fl w-50'>{{commodities|d(0)}} surplus commodities</div>
+			<div class='f4 fl w-50'>{{averageWealth|£}} average wealth accumulated</div>
 			<div class='f4 fl w-50'>{{averageHunger|d(1)}}% average hunger</div>
 			<div class='f4 fl w-50'>{{averageWorkingDay|hrs}} average working hours</div>
 			<br style='clear: both; float: none'>
@@ -41,7 +44,8 @@
 					<td v-if="lifecycle" class='age'>(Gen {{person.generation}}, <b>aged {{person.age}}</b>)</td>
 					<td class='hoursWorked'>works <b>{{person.hoursWorked|hrs}} hrs</b></td>
 					<td class='tr'>and produces <b>{{person.dailyProduct|d(3)}}</b></td>
-					<td class='tr'>for <b>{{person.dailyWage|£}}</b></td>
+					<td class='tr'>(<b>{{person.hourlyRelativeProduct|d(3)}}× avg</b>)</td>
+					<td class='tr'>for <b>{{person.dailyWage|£}}</b> daily</td>
 					<td class='b'>&middot;</td>
 					<td class='tr wallet'>Savings: <b>{{person.wallet|£}}</b></td>
 					<td class='tr hunger'>(<b>{{person.hunger|d(0)}}% hungry</b>)</td>
