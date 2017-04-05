@@ -23,13 +23,13 @@ var Human = Vue.extend({
 	computed: {
 		name: function() { return this.firstname+" "+this.lastname; },
 		hoursWorked: function() {
-			return (Society.LabourPowerSocAvgUnit / this.LabourPowerIndividual) * Society.hoursWorkingDay;
+			return Society.hoursWorkingDay; // Now, refer this to food requirements, max time available
 		},
 		dailyProduct: function() {
-			return this.LabourPowerIndividual * this.hoursWorked;
+			return this.hoursWorked * this.LabourPowerIndividual;
 		},
 		dailyWage: function() {
-			return this.dailyProduct * this.LabourPowerSocAvgUnit;
+			return this.dailyProduct / Society.dailyProductAvg;
 		}
 	},
 	methods: {
@@ -38,7 +38,7 @@ var Human = Vue.extend({
 			if(this.age >= this.ageAdult) {
 				this.wallet += this.dailyWage;
 				Society.commodities += this.dailyProduct;
-				this.hunger += this.hoursWorked;
+				this.hunger++;
 			} else {
 				this.hunger += this.babyFood; // Baby stomach
 			}
@@ -51,14 +51,11 @@ var Human = Vue.extend({
 			}
 
 			if(Society.commodities >= foodRequired && this.wallet >= foodRequired) {
-				console.log(this.name+" can afford food")
 				var foodAcquired = this.hunger;
 			} else
 			if(Society.commodities >= this.wallet && this.wallet > 0) {
-				console.log(this.name+" might afford SOME food")
 				var foodAcquired = this.wallet;
 			} else {
-				console.log(this.name+" is fuckt")
 				var foodAcquired = 0;
 			}
 

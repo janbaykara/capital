@@ -5,7 +5,7 @@ var Society = new Vue({
 		commodities: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 1000,
+		tickSpeed: 100,
 		hoursWorkingDay: 10,
 		lifecycle: false
 	},
@@ -33,6 +33,12 @@ var Society = new Vue({
 		},
 		LabourPowerSocAvgUnit: function() { // value of commodity
 			return _.meanBy(this.workingPopulation, 'LabourPowerIndividual');
+		},
+		dailyProductTotal: function() {
+			return _.sumBy(this.workingPopulation, 'dailyProduct');
+		},
+		dailyProductAvg: function() {
+			return _.meanBy(this.workingPopulation, 'dailyProduct');
 		}
 	},
 	created: function() {

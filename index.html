@@ -9,13 +9,16 @@
 	<body>
 		<main id='society' class='pv4 ph6 center'>
 			<h2><i>Capital</i> Day {{day}}</h2>
-			<div class='f3'>{{currentPopulation.length}} humans (average age of {{averageAge.toFixed(0)}})</div>
-			<div class='f3'>{{LabourPowerTotal|£}} total labour</div>
-			<div class='f3'>{{LabourPowerSocAvgUnit|£}} labour unit value</div>
-			<div class='f4'>{{commodities.toFixed(0)}} surplus commodities</div>
-			<div class='f4'>{{averageWealth|£}} average wealth</div>
-			<div class='f4'>{{averageWorkingDay|hrs}} average working hours
-			<div class='f4'>{{averageHunger.toFixed(1)}}% average hunger</div>
+			<div class='f3'>{{currentPopulation.length}} humans (average age of {{averageAge|d(0)}})</div>
+			<div class='f3 fl w-50'>{{LabourPowerTotal|£}} total labour</div>
+			<div class='f3 fl w-50'>{{LabourPowerSocAvgUnit|£}} labour unit value</div>
+			<div class='f3 fl w-50'>{{dailyProductTotal|d(1)}} total production</div>
+			<div class='f3 fl w-50'>{{dailyProductAvg|d(1)}} avg person production</div>
+			<div class='f4 fl w-50'>{{averageWealth|£}} average wealth accumulated</div>
+			<div class='f4 fl w-50'>{{commodities|d(0)}} surplus commodities</div>
+			<div class='f4 fl w-50'>{{averageHunger|d(1)}}% average hunger</div>
+			<div class='f4 fl w-50'>{{averageWorkingDay|hrs}} average working hours</div>
+			<br style='clear: both; float: none'>
 			<br>
 			<!-- D3 charts for: -->
 			<!-- * population growth -->
@@ -33,13 +36,15 @@
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
 					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0, lazy: person.LabourPowerIndividual < LabourPowerSocAvgUnit, poor: person.wallet < 0.01, young: person.age < person.ageAdult, old: person.age >= person.ageElderly }">
-					<td class='LabourPowerIndividual'><b>{{person.LabourPowerIndividual.toFixed(2)}} labour</b>,</td>
-					<td class='hoursWorked'>working <b>{{person.hoursWorked|hrs}} hours,</b></td>
-					<td class='tr wallet'>earns <b>{{person.dailyWage|£}}</b></td>
-					<td class='tr wallet'>and has <b>{{person.wallet|£}}</b></td>
-					<td class='tr hunger'><b>{{person.hunger.toFixed(0)}}% hungry</b></td>
-					<td class='name'>{{person.firstname}} <b>{{person.lastname}}</b>
-					<td class='age'>(Gen {{person.generation}}) <b>aged {{person.age}}</b></td>
+					<td class='name tr'>{{person.firstname}} <b>{{person.lastname}}</b>
+					<td class='LabourPowerIndividual'>(<b>{{person.LabourPowerIndividual|d(3)}} productivity</b>)</td>
+					<td v-if="lifecycle" class='age'>(Gen {{person.generation}}, <b>aged {{person.age}}</b>)</td>
+					<td class='hoursWorked'>works <b>{{person.hoursWorked|hrs}} hrs</b></td>
+					<td class='tr'>and produces <b>{{person.dailyProduct|d(3)}}</b></td>
+					<td class='tr'>for <b>{{person.dailyWage|£}}</b></td>
+					<td class='b'>&middot;</td>
+					<td class='tr wallet'>Savings: <b>{{person.wallet|£}}</b></td>
+					<td class='tr hunger'>(<b>{{person.hunger|d(0)}}% hungry</b>)</td>
 				</tr>
 			</table>
 		</main>

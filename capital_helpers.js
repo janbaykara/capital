@@ -1,6 +1,10 @@
 // Config
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
+Vue.filter('d', function (value,x) {
+    return value.toFixed(x);
+});
+
 Vue.filter('£', function (value) {
     return accounting.formatMoney(value, "£")
 });
