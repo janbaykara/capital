@@ -9,6 +9,8 @@ var Society = new Vue({
 		lifecycle: true,
 		inheritance: false,
 		equalHours: false
+		clock: null,
+		clockTicking: false
 	},
 	computed: {
 		currentPopulation: function() {
@@ -49,14 +51,29 @@ var Society = new Vue({
 		}
 	},
 	created: function() {
-		// And everyday after...
-		setInterval(function() {
-			Society.newDay();
-		}, this.tickSpeed);
+		this.clockStart("In the beginning...");
 	},
 	methods: {
+		clockStart: function(message) {
+			this.clock = setInterval(function() {
+				Society.newDay();
+			}, this.tickSpeed);
+			this.clockTicking = true;
+			if(message) console.log("Clock starts at Day "+this.day+": "+message);
+		},
+		clockPause : function(message) {
+			clearInterval(this.clock);
+			this.clockTicking = false;
+			if(message) console.log("Clock paused at Day "+this.day+": "+message);
+		},
 		newDay: function() {
 			console.groupEnd();
+
+			if(this.currentPopulation.length == 0) {
+				this.clockPause("Game over...");
+				return false;
+			}
+
 			console.group("Day "+this.day,this.LabourPowerSocAvgUnit);
 
 			Society.day++;
