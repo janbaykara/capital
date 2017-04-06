@@ -9,7 +9,7 @@
 	<body>
 		<main id='society' class='pv4 ph5 center'>
 			<h2><i>Capital</i> Day {{day}}</h2>
-			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age of {{averageAge|d(0)}})</span></div>
+			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age of {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(1)}})</span></div>
 			<br>
 			<div class='f3 fl w-50'>{{LabourPowerSocAvgUnit|£}} social price of labour/commodity unit</div>
 			<div class='f3 fl w-50'>{{LabourPowerTotal|£}} GDP</div>

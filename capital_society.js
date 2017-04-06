@@ -5,7 +5,7 @@ var Society = new Vue({
 		commodities: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 200,
+		tickSpeed: 1000,
 		lifecycle: true,
 		inheritance: false,
 		equalHours: false
@@ -16,6 +16,9 @@ var Society = new Vue({
 		},
 		workingPopulation: function() {
 			return _(this.currentPopulation).filter((p)=>p.age >= p.ageAdult).value();
+		},
+		averageOffspring: function() {
+			return _.chain(this.population).filter((p)=>p.age >= p.ageAdult).meanBy((p)=>p.offspring.length).value();
 		},
 		averageAge: function() {
 			return _.meanBy(this.currentPopulation, 'age');
@@ -53,6 +56,9 @@ var Society = new Vue({
 	},
 	methods: {
 		newDay: function() {
+			console.groupEnd();
+			console.group("Day "+this.day,this.LabourPowerSocAvgUnit);
+
 			Society.day++;
 
 			Society.currentPopulation.forEach(function(person) {

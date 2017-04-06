@@ -17,7 +17,7 @@ var Human = Vue.extend({
 			chanceOfConception: 5,
 			chanceOfRandomDeath: 0,
 			hungerThreshold: 100,
-			hoursInDay: 12,
+			hoursInDay: 24,
 			adultFoodAvg: 12,
 			babyFoodAvg: 6
 		};
@@ -28,7 +28,8 @@ var Human = Vue.extend({
 			if(Society.equalHours) {
 				return this.hoursInDay;
 			} else {
-				return Math.min(this.hoursInDay, (Society.commodityPrice * this.adultFoodAvg) / this.hourlyRelativeProduct); // Now, refer this to food requirements, max time available
+				var foodRequiredPrice = Society.commodityPrice * (this.hunger + this.adultFoodAvg)
+				return Math.min(this.hoursInDay, foodRequiredPrice / this.hourlyRelativeProduct); // Now, refer this to food requirements, max time available
 			}
 		},
 		hourlyRelativeProduct: function() {
@@ -53,13 +54,13 @@ var Human = Vue.extend({
 			}
 		},
 		consume: function () {
-			var priceOfFoodNeeded = this.hunger * Society.commodityPrice;
+			var foodRequiredPrice = this.hunger * Society.commodityPrice;
 
-			if(Society.commodities >= this.hunger && this.wallet >= priceOfFoodNeeded) {
+			if(Society.commodities >= this.hunger && this.wallet >= foodRequiredPrice) {
 				var foodAcquired = this.hunger;
 			} else
 			if(Society.commodities >= this.wallet && this.wallet > 0) {
-				var foodAcquired = (this.wallet/priceOfFoodNeeded) * this.hunger;
+				var foodAcquired = (this.wallet/foodRequiredPrice) * this.hunger;
 			} else {
 				var foodAcquired = 0;
 			}
