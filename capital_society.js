@@ -8,7 +8,7 @@ var Society = new Vue({
 		tickSpeed: 1000,
 		lifecycle: true,
 		inheritance: false,
-		equalHours: false
+		equalHours: false,
 		clock: null,
 		clockTicking: false
 	},
