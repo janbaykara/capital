@@ -2,13 +2,14 @@ var Society = new Vue({
 	el: '#society',
 	data: {
 		population: [],
-		commodities: 0,
+		commodityStock: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 1000,
+		tickSpeed: 500,
 		lifecycle: true,
 		inheritance: false,
 		equalHours: false,
+		savings: false,
 		clock: null,
 		clockTicking: false
 	},
@@ -30,6 +31,12 @@ var Society = new Vue({
 		},
 		averageHunger: function() {
 			return _.meanBy(this.workingPopulation, 'hunger');
+		},
+		dailyHunger: function() {
+			return _.sumBy(this.currentPopulation, 'hunger');
+		},
+		dailyFoodNeeded: function() {
+			return this.currentPopulation.length * this.population[0].dailyFoodRequired;
 		},
 		averageWorkingDay: function() {
 			return _.meanBy(this.workingPopulation, 'hoursWorked');

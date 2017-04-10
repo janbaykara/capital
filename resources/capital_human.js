@@ -1,36 +1,35 @@
 var Human = Vue.extend({
 	data: function() {
 		return {
+			DNA: Array(20+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, 20),
 			age: 0,
 			alive: true,
 			hunger: 0,
-			wallet: 0,
+			savings: 0,
 			generation: 0,
 			offspring: [],
 			isHighlighted: false,
 			firstname: _.sample(firstnames),
 			lastname: _.sample(lastnames),
-			LabourPowerIndividual: Society.LabourPowerSocAvgUnit * _.random(0.75,1.25) || 1,
+			LabourPowerIndividual: Society.day > 1 ? Society.LabourPowerSocAvgUnit * _.random(1,1.25) : _.random(1,1.25),
 			ageAdult: Society.lifecycle ? 16 : 0,
 			ageInfertility: 55,
 			ageElderly: 75,
 			chanceOfConception: 5,
 			chanceOfRandomDeath: 0,
 			hungerThreshold: 100,
-			hoursInDay: 24,
-			adultFoodAvg: 12,
-			babyFoodAvg: 6
+			hoursInDay: 23.99,
+			adultFoodAvg: 20,
+			babyFoodAvg: 20
 		};
 	},
 	computed: {
 		name: function() { return this.firstname+" "+this.lastname; },
 		hoursWorked: function() {
-			if(Society.equalHours) {
-				return this.hoursInDay;
-			} else {
-				var foodRequiredPrice = Society.commodityPrice * (this.hunger + this.adultFoodAvg)
-				return Math.min(this.hoursInDay, foodRequiredPrice / this.hourlyRelativeProduct); // Now, refer this to food requirements, max time available
-			}
+			if(Society.equalHours) return this.hoursInDay;
+
+			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.commodityPrice;
+			return Math.min(this.hoursInDay, Math.max(0, foodMoneyRequired / this.hourlyRelativeProduct ) );
 		},
 		hourlyRelativeProduct: function() {
 			return this.LabourPowerIndividual / Society.LabourPowerSocAvgUnit;
@@ -38,36 +37,29 @@ var Human = Vue.extend({
 		dailyProduct: function() {
 			return this.hoursWorked * this.LabourPowerIndividual;
 		},
-		dailyWage: function() {
-			return this.hourlyRelativeProduct * this.hoursWorked;
+		dailyFoodRequired: function() {
+			return this.age < this.ageAdult ? this.babyFoodAvg : this.adultFoodAvg
 		}
 	},
 	methods: {
 		produce: function() {
-			// # Incentive to beat the competition to market
 			if(this.age >= this.ageAdult) {
-				this.wallet += this.hourlyRelativeProduct * this.hoursWorked; // Share of today's social wealth (combined congealed labour of society)
-				Society.commodities += this.dailyProduct;
-				this.hunger += this.adultFoodAvg;
-			} else {
-				this.hunger += this.babyFoodAvg; // Baby stomach
+				Society.commodityStock += this.dailyProduct;
+				this.savings += this.hourlyRelativeProduct * this.hoursWorked; // Share of today's social wealth (combined congealed labour of society)
 			}
+
+			this.hunger += this.dailyFoodRequired;
 		},
 		consume: function () {
-			var foodRequiredPrice = this.hunger * Society.commodityPrice;
+			var foodAvailable = Math.max(0, Society.commodityStock);
+			var foodWanted = Math.min(this.hunger, foodAvailable);
+			var foodAffordable = this.age < this.ageAdult ? foodWanted : (this.savings / Society.commodityPrice) // Kids don't pay for food
+			var foodToBuy = Math.min(foodAffordable, foodWanted)
 
-			if(Society.commodities >= this.hunger && this.wallet >= foodRequiredPrice) {
-				var foodAcquired = this.hunger;
-			} else
-			if(Society.commodities >= this.wallet && this.wallet > 0) {
-				var foodAcquired = (this.wallet/foodRequiredPrice) * this.hunger;
-			} else {
-				var foodAcquired = 0;
-			}
-
-			Society.commodities -= foodAcquired;
-			this.hunger -= foodAcquired;
-			this.wallet -= foodAcquired * Society.commodityPrice; // # We need to talk in terms of value and exchange-value, not in terms of commodity 'units' (meaningless)
+			Society.commodityStock -= foodToBuy;
+			this.hunger -= foodToBuy;
+			if(this.age >= this.ageAdult)
+				this.savings -= foodToBuy * Society.commodityPrice;
 		},
 		improve: function() {
 			// # Overproducers should be able to improve easier (£ investment)
@@ -95,11 +87,8 @@ var Human = Vue.extend({
 			) {
 				var x = new Human();
 				x.generation = this.generation + 1;
-				// if(x.generation > 3 && _.random(0,100) < 50) {
-					x.lastname = this.lastname;
-				// }
-				x.wallet = this.babyFoodAvg * (this.ageAdult-1); // Stipend so they can get food til' working age
-				this.offspring.push(x);
+				x.lastname = this.lastname;
+				this.offspring.push(x.DNA);
 				Society.population.push(x);
 				console.log(this.name+" gave had child no."+this.offspring.length+": "+x.firstname+"! :)")
 			}
@@ -107,22 +96,24 @@ var Human = Vue.extend({
 		die: function(reason) {
 			if(!Society.lifecycle) return false;
 
+			// Death
+			this.alive = false;
+			console.log(_.template(reason)(this));
+
 			// Inheritance to offspring
-			if(Society.inheritance) {
-				var parent = this;
-				var livingChildren = _(parent.offspring).filter('alive').value();
-				var inheritance = parent.wallet / livingChildren.length;
+			var parent = this;
+			if(Society.inheritance && Society.savings && this.savings > 0.01) {
+				var livingChildren = _(parent.offspring).map(function(childDNA) {
+					return _.find(Society.currentPopulation, ['DNA', childDNA]);
+				}).value().filter(String);
+				var inheritance = parent.savings / livingChildren.length;
 				if(inheritance > 0) {
 					livingChildren.forEach(function(child) {
-						child.wallet += inheritance;
+						child.savings += inheritance;
 						console.log(child.name+" received an inheritance of £"+inheritance.toFixed(2)+" from their parent, "+parent.name);
 					});
 				}
 			}
-
-			// Death
-			this.alive = false;
-			console.log(_.template(reason)(this));
 		},
 		live: function() {
 			if(!this.alive) { return false; } // Just to double check...
@@ -144,10 +135,13 @@ var Human = Vue.extend({
 				this.improve();
 
 				// Reproduce chance
-				if( (Society.commodities/Society.currentPopulation.length) >= this.ageAdult
+				if( Society.lifecycle
+				&& (Society.commodityStock/Society.currentPopulation.length) >= this.ageAdult
 				&& _.random(0,100) < this.chanceOfConception ) {
 					this.reproduce();
 				}
+
+				if(!Society.savings) this.savings = 0;
 
 				this.age++;
 			}

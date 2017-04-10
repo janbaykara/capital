@@ -1,6 +1,10 @@
 // Config
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
+Vue.filter('%', function (value,x) {
+    return (value*100).toFixed(x)+"%"
+});
+
 Vue.filter('d', function (value,x) {
     return value.toFixed(x);
 });

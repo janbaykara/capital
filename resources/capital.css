@@ -1,0 +1,36 @@
+.highlighted > * {
+	background: yellow !important;
+}
+
+.population {
+	color: #888;
+	font-size: 11px;
+}
+
+.population b {
+	color: #555;
+}
+
+.hungry > .hunger b {
+	color: red;
+}
+
+.lazy > .LabourPowerIndividual b {
+	color: red;
+}
+
+.poor > .savings b {
+	color: red;
+}
+
+.young > .age b {
+	color: blue;
+}
+
+.old > .age b {
+	color: orange;
+}
+
+.overworked > .hoursWorked b {
+	color: red;
+}
