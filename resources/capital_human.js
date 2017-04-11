@@ -30,7 +30,7 @@ var Human = Vue.extend({
 			if(Society.equalHours) return this.hoursInDay;
 
 			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.LabourTimeSocNec;
-			return Math.min(this.hoursInDay, Math.max(0, foodMoneyRequired / this.hourlyRelativeProduct ) );
+			return Math.min(Society.hoursWorkMax, Math.max(Society.hoursWorkMin, foodMoneyRequired / this.hourlyRelativeProduct ) );
 		},
 		hourlyRelativeProduct: function() {
 			return this.LabourIndividualProductivity / Society.LabourTimeSocNec;

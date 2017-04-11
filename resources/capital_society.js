@@ -1,19 +1,25 @@
 var Society = new Vue({
 	el: '#society',
 	data: {
-		population: [],
-		commodityStock: 0,
-		day: 0,
-		chanceOfCatastrophe: 0,
-		tickSpeed: 500,
-		speedOptions: [1000,500,250,100,10,1],
+		// config
 		lifecycle: true,
-		inheritance: false,
+		inheritance: true,
 		equalHours: false,
 		banking: true,
+		chanceOfCatastrophe: 0.001,
+		// time
+		day: 0,
 		clock: null,
 		clockTicking: false,
-		statistics: {}
+		tickSpeed: 500,
+		speedOptions: [1000,500,250,100,10,1],
+		// runtime
+		population: [],
+		commodityStock: 0,
+		statistics: {},
+		// laws
+		hoursWorkMin: 0,
+		hoursWorkMax: 12
 	},
 	computed: {
 		currentPopulation: function() {
