@@ -5,7 +5,8 @@ var Society = new Vue({
 		commodityStock: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 50,
+		tickSpeed: 500,
+		speedOptions: [1000,500,250,100,10],
 		lifecycle: true,
 		inheritance: false,
 		equalHours: false,
@@ -109,10 +110,15 @@ var Society = new Vue({
 			this.clockTicking = true;
 			if(message) console.log("Clock starts at Day "+this.day+": "+message);
 		},
-		clockPause : function(message) {
+		clockPause: function(message) {
 			clearInterval(this.clock);
 			this.clockTicking = false;
 			if(message) console.log("Clock paused at Day "+this.day+": "+message);
+		},
+		changeTickSpeed: function(value) {
+			this.tickSpeed = value;
+			this.clockPause("Clock set to "+value+"ms per tick");
+			this.clockStart();
 		},
 		newDay: function() {
 			console.groupEnd();

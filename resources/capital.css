@@ -1,3 +1,11 @@
+/* UI */
+.speedOption + .speedOption:before {
+	content: " / ";
+	color: #DDD;
+}
+
+/* Table */
+
 .highlighted > * {
 	background: yellow !important;
 }
@@ -38,6 +46,8 @@
 .overworked > .hoursWorked b {
 	color: red;
 }
+
+/* Graph */
 
 path.area {
 	fill: orange;

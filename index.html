@@ -10,7 +10,15 @@
 	<body>
 		<main id='society' class='pv4 ph5 center'>
 			<h2 class='mb0'><i>Capital</i></h2>
-			<div><span class='pointer fa' v-on:click='clockTicking ? clockPause() : clockStart()' v-bind:class="{'fa-pause': clockTicking, 'fa-play': !clockTicking}"></span> <span class='b'>Day {{day}}</span></div>
+			<div>
+				<span>
+					<span class='pointer fa' v-on:click='clockTicking ? clockPause() : clockStart()' v-bind:class="{'fa-pause': clockTicking, 'fa-play': !clockTicking}"></span>
+					<span class='b'>Day {{day}}</span>
+				</span>
+				<span class='gray'>&nbsp;Clock speed:
+					<span class='gray speedOption pointer' v-for='ms in speedOptions' v-on:click="changeTickSpeed(ms)">{{ms/1000}}s&nbsp;</span>
+				</span>
+			</div>
 			<br>
 			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(2)}})</span></div>
 			<br>
