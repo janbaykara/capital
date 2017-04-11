@@ -6,7 +6,7 @@ var Society = new Vue({
 		inheritance: true,
 		equalHours: false,
 		banking: true,
-		chanceOfCatastrophe: 0.001,
+		chanceOfCatastrophe: 0.0000001,
 		// time
 		day: 0,
 		clock: null,
@@ -150,15 +150,17 @@ var Society = new Vue({
 		},
 		catastrophe: function() {
 			console.log("We're all gonna die!")
+			var theIncident = _.sample([
+				'{{name}} was killed by a terrible earthquake! D:',
+				'{{name}} was killed by deadly Zika virus! D:',
+				'{{name}} was killed by a deadly killer bees! D:',
+				'{{name}} drowned in a flood of frogs! D:',
+				'{{name}} was eaten by a swarm of locusts! D:',
+			]);
+
 			Society.currentPopulation.forEach(function(person) {
 				if(_.random(0,100) < _.random(0,100)) {
-					person.die(_.sample([
-						'{{name}} was killed by a terrible earthquake! D:',
-						'{{name}} was killed by deadly Zika virus! D:',
-						'{{name}} was killed by a deadly killer bees! D:',
-						'{{name}} drowned in a flood of frogs! D:',
-						'{{name}} was eaten by a swarm of locusts! D:',
-					]));
+					person.die(theIncident);
 				}
 			})
 		}

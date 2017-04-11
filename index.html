@@ -44,23 +44,16 @@
 			</div>
 
 			<div class='fl w-33 mv3'>
+				<div class='f4 b'>{{workingPopulation.length}} of working age</div>
+				<div class='f5' v-if='lifecycle'>{{workingPopulation.length/currentPopulation.length|%(0)}} of population</div>
+				<area-chart :stats='statistics.workingPopulation' :ceil='statSets.currentPopulation.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Socially Necessary Labour-Time</div>
 				<div class='f5'>{{LabourTimeSocNec|£}}</div>
 				<area-chart :stats='statistics.LabourTimeSocNec' :ceil='statSets.LabourTimeSocNec.ceiling' :floor='statSets.LabourTimeSocNec.floor' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33 mv3'>
-				<div class='f4 b'>Average Hours Worked</div>
-				<div class='f5'>{{averageWorkingDay|hrs}}</div>
-				<area-chart :stats='statistics.averageWorkingDay' :ceil='statSets.averageWorkingDay.ceiling' :floor='statSets.averageWorkingDay.floor' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33 mv3'>
-				<div class='f4 b'>Stock of commodities</div>
-				<div class='f5'>{{commodityStock|d(0)}}</div>
-				<area-chart :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
 			</div>
 
@@ -75,8 +68,16 @@
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Daily Consumption</div>
 				<div class='f5'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
-				<div class='f5'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
+				<div class='f5'>{{dailyHunger|d(0)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
 				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33 mv3'>
+				<div class='f4 b'>Stock of commodities</div>
+				<div class='f5'>{{commodityStock|d(0)}}</div>
+				<div class='f5'>Avg of {{commodityStock/currentPopulation.length|d(0)}} commodities per person</div>
+				<area-chart :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
 			</div>
 
