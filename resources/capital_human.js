@@ -11,7 +11,7 @@ var Human = Vue.extend({
 			isHighlighted: false,
 			firstname: _.sample(firstnames),
 			lastname: _.sample(lastnames),
-			LabourPowerIndividual: Society.day > 1 ? Society.LabourPowerSocAvgUnit * _.random(1,1.25) : _.random(1,1.25),
+			LabourIndividualProductivity: Society.day > 1 ? Society.LabourTimeSocNec * _.random(1,1.25) : _.random(1,1.25),
 			ageAdult: Society.lifecycle ? 16 : 0,
 			ageInfertility: 55,
 			ageElderly: 75,
@@ -28,14 +28,14 @@ var Human = Vue.extend({
 		hoursWorked: function() {
 			if(Society.equalHours) return this.hoursInDay;
 
-			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.LabourPowerSocAvgUnit;
+			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.LabourTimeSocNec;
 			return Math.min(this.hoursInDay, Math.max(0, foodMoneyRequired / this.hourlyRelativeProduct ) );
 		},
 		hourlyRelativeProduct: function() {
-			return this.LabourPowerIndividual / Society.LabourPowerSocAvgUnit;
+			return this.LabourIndividualProductivity / Society.LabourTimeSocNec;
 		},
 		dailyProduct: function() {
-			return this.hoursWorked * this.LabourPowerIndividual;
+			return this.hoursWorked * this.LabourIndividualProductivity;
 		},
 		dailyFoodRequired: function() {
 			return this.age < this.ageAdult ? this.babyFoodAvg : this.adultFoodAvg
@@ -53,17 +53,17 @@ var Human = Vue.extend({
 		consume: function () {
 			var foodAvailable = Math.max(0, Society.commodityStock);
 			var foodWanted = Math.min(this.hunger, foodAvailable);
-			var foodAffordable = this.age < this.ageAdult ? foodWanted : (this.savings / Society.LabourPowerSocAvgUnit) // Kids don't pay for food
+			var foodAffordable = this.age < this.ageAdult ? foodWanted : (this.savings / Society.LabourTimeSocNec) // Kids don't pay for food
 			var foodToBuy = Math.min(foodAffordable, foodWanted)
 
 			Society.commodityStock -= foodToBuy;
 			this.hunger -= foodToBuy;
 			if(this.age >= this.ageAdult)
-				this.savings -= foodToBuy * Society.LabourPowerSocAvgUnit;
+				this.savings -= foodToBuy * Society.LabourTimeSocNec;
 		},
 		improve: function() {
 			// # Overproducers should be able to improve easier (£ investment)
-			prodIncChance = (Math.pow(Society.LabourPowerSocAvgUnit,1.5) / this.LabourPowerIndividual) * 10
+			prodIncChance = (Math.pow(Society.LabourTimeSocNec,1.5) / this.LabourIndividualProductivity) * 10
 			// prodIncChance *= this.wage/10;
 
 			if(this.age >= this.ageAdult && _.random(0,100) < 0.05) { // Eureka!
@@ -74,7 +74,7 @@ var Human = Vue.extend({
 			}
 
 			// Random chance of productivity increase
-			if(_.random(0,100) < prodIncChance) this.LabourPowerIndividual += prodInc;
+			if(_.random(0,100) < prodIncChance) this.LabourIndividualProductivity += prodInc;
 		},
 		// # Reproduce, based on commodities available, to a limit
 		reproduce: function() {

@@ -15,7 +15,7 @@ var Society = new Vue({
 	},
 	computed: {
 		currentPopulation: function() {
-			return _(this.population).filter('alive').orderBy(['LabourPowerIndividual'], ['desc']).value();
+			return _(this.population).filter('alive').orderBy(['LabourIndividualProductivity'], ['desc']).value();
 		},
 		workingPopulation: function() {
 			return _(this.currentPopulation).filter((p)=>p.age >= p.ageAdult).value();
@@ -42,10 +42,10 @@ var Society = new Vue({
 			return _.meanBy(this.workingPopulation, 'hoursWorked');
 		},
 		LabourPowerTotal: function() {
-			return _.sumBy(this.workingPopulation, 'LabourPowerIndividual');
+			return _.sumBy(this.workingPopulation, 'LabourIndividualProductivity');
 		},
-		LabourPowerSocAvgUnit: function() { // value of commodity
-			return _.meanBy(this.workingPopulation, 'LabourPowerIndividual');
+		LabourTimeSocNec: function() { // value of commodity
+			return _.meanBy(this.workingPopulation, 'LabourIndividualProductivity');
 		},
 		dailyProductTotal: function() {
 			return _.sumBy(this.workingPopulation, 'dailyProduct');
@@ -78,7 +78,7 @@ var Society = new Vue({
 				return false;
 			}
 
-			console.group("Day "+this.day,this.LabourPowerSocAvgUnit);
+			console.group("Day "+this.day,this.LabourTimeSocNec);
 
 			Society.day++;
 
