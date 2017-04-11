@@ -90,7 +90,7 @@ var Human = Vue.extend({
 				x.lastname = this.lastname;
 				this.offspring.push(x.DNA);
 				Society.population.push(x);
-				console.log(this.name+" gave had child no."+this.offspring.length+": "+x.firstname+"! :)")
+				console.log(this.name+" had child no."+this.offspring.length+": "+x.firstname+"! :)")
 			}
 		},
 		die: function(reason) {
