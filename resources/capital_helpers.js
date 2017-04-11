@@ -9,8 +9,9 @@ Vue.filter('d', function (value,x) {
     return value.toFixed(x);
 });
 
+var numberFormat = new Intl.NumberFormat('en-GB', {style:"currency", currency:"GBP"});
 Vue.filter('£', function (value) {
-    return accounting.formatMoney(value, "£")
+	return numberFormat.format(value);
 });
 
 Vue.filter('hrs', function (value) {
