@@ -14,12 +14,12 @@
 			<br>
 			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age of {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(2)}})</span></div>
 			<br>
-			<div class='f3 fl w-50'>{{LabourTimeSocNec|£}} social price of labour/commodity unit</div>
+			<div class='f3 fl w-50'>{{LabourTimeSocNec|£}} socially necessary labour time, per commodity</div>
 			<div class='f3 fl w-50'>{{dailyProductTotal|d(1)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
-			<div class='f3 fl w-50'>{{dailyProductAvg|d(1)}} avg production per person</div>
-			<div class='f3 fr w-50'>{{dailyFoodNeeded}} daily food required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
-			<div class='f3 fl w-50'>{{commodityStock|d(0)}} surplus commodities</div>
-			<div class='f3 fr w-50'>{{dailyHunger|d(1)}} hunger ({{averageHunger|d(1)}}% avg)</div>
+			<div class='f3 fl w-50'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
+			<div class='f3 fr w-50'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
+			<div class='f3 fl w-50'>{{commodityStock|d(0)}} surplus commodity pile</div>
+			<div class='f3 fr w-50'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
 			<br style='clear: both; float: none'>
 			<br>
 			<div class='f4 fl w-50' v-if='savings'>{{averageWealth|£}} average wealth accumulated</div>
