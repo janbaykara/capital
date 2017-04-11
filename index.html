@@ -38,7 +38,7 @@
 
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>{{currentPopulation.length}} humans</div>
-				<div class='f5' v-if='lifecycle'>Average age {{averageAge|d(0)}}, {{averageOffspring|d(2)}}</div>
+				<div class='f5' v-if='lifecycle'>Average age {{averageAge|d(0)}}, {{averageOffspring|d(2)}} kids per person</div>
 				<area-chart :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
 			</div>
@@ -75,7 +75,7 @@
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Daily Consumption</div>
 				<div class='f5'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
-				<div class='f5'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
+				<div class='f5'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|%(1)}} avg)</div>
 				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
 			</div>
@@ -96,7 +96,7 @@
 					<td class='ph1 tr'>for <b>{{person.hourlyRelativeProduct * person.hoursWorked|£}}</b> daily</td>
 					<td class='ph1 b'>&middot;</td>
 					<td class='ph1 tr savings' v-if='savings'>Savings: <b>{{person.savings|£}}</b></td>
-					<td class='pl1 tr hunger'>(<b>{{person.hunger|d(0)}}% hungry</b>)</td>
+					<td class='pl1 tr hunger'>(<b>{{person.hunger|%(0)}} hungry</b>)</td>
 				</tr>
 			</table>
 		</main>
