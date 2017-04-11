@@ -10,7 +10,7 @@ var Society = new Vue({
 		lifecycle: true,
 		inheritance: false,
 		equalHours: false,
-		savings: false,
+		banking: true,
 		clock: null,
 		clockTicking: false,
 		statistics: {}
@@ -29,7 +29,7 @@ var Society = new Vue({
 			return _.meanBy(this.currentPopulation, 'age');
 		},
 		averageWealth: function() {
-			return _.meanBy(this.workingPopulation, 'wallet');
+			return _.meanBy(this.workingPopulation, 'savings');
 		},
 		averageHunger: function() {
 			return _.meanBy(this.workingPopulation, 'hunger');

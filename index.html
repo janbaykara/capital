@@ -19,7 +19,7 @@
 					<span class='speedOption pointer' v-bind:class="{black: ms == tickSpeed}" v-for='ms in speedOptions' v-on:click="changeTickSpeed(ms)">{{ms/1000}}s&nbsp;</span>
 				</span>
 			</div>
-			<div class='f3 mv3' v-if='savings'>{{averageWealth|£}} average wealth accumulated</div>
+			<div class='f3 mv3' v-if='banking'>{{averageWealth|£}} average wealth accumulated</div>
 			<div style='display: none;'>{{dailyFoodNeeded}}</div>
 			<!-- For the weirdest reason, the graphds don't display if dailyFoodNeeded isn't rendered above this line. -->
 
@@ -95,8 +95,8 @@
 					<td class='ph1 tr'>and produces <b>{{person.dailyProduct|d(1)}}</b></td>
 					<td class='ph1 tr'>for <b>{{person.hourlyRelativeProduct * person.hoursWorked|£}}</b> daily</td>
 					<td class='ph1 b'>&middot;</td>
-					<td class='ph1 tr savings' v-if='savings'>Savings: <b>{{person.savings|£}}</b></td>
-					<td class='pl1 tr hunger'>(<b>{{person.hunger|%(0)}} hungry</b>)</td>
+					<td class='ph1 tr savings' v-if='banking'>Savings: <b>{{person.savings|£}}</b></td>
+					<td class='pl1 tr hunger'>(<b>{{person.hunger|d(0)}}% hungry</b>)</td>
 				</tr>
 			</table>
 		</main>

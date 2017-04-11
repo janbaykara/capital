@@ -103,7 +103,7 @@ var Human = Vue.extend({
 
 			// Inheritance to offspring
 			var parent = this;
-			if(Society.inheritance && Society.savings && this.savings > 0.01) {
+			if(Society.inheritance && Society.banking && this.savings > 0.01) {
 				var livingChildren = _(parent.offspring).map(function(childDNA) {
 					return _.find(Society.currentPopulation, ['DNA', childDNA]);
 				}).value().filter(String);
@@ -142,7 +142,7 @@ var Human = Vue.extend({
 					this.reproduce();
 				}
 
-				if(!Society.savings) this.savings = 0;
+				if(!Society.banking) this.savings = 0;
 
 				this.age++;
 			}
