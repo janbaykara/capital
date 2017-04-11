@@ -26,6 +26,7 @@ var Human = Vue.extend({
 	computed: {
 		name: function() { return this.firstname+" "+this.lastname; },
 		hoursWorked: function() {
+			if(this.age < this.ageAdult) return 0;
 			if(Society.equalHours) return this.hoursInDay;
 
 			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.LabourTimeSocNec;
