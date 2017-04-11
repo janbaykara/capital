@@ -38,3 +38,13 @@
 .overworked > .hoursWorked b {
 	color: red;
 }
+
+path.area {
+	fill: orange;
+}
+
+path.line {
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+}
