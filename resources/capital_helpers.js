@@ -6,7 +6,8 @@ Vue.filter('%', function (value,x) {
 });
 
 Vue.filter('d', function (value,x) {
-    return value.toFixed(x);
+	var commaFormat = new Intl.NumberFormat('en-GB', {minimumFractionDigits: x, maximumFractionDigits: x});
+    return commaFormat.format(value);
 });
 
 var numberFormat = new Intl.NumberFormat('en-GB', {style:"currency", currency:"GBP"});
