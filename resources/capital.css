@@ -2,6 +2,10 @@
 	background: yellow !important;
 }
 
+.dead * {
+    color: pink !important;
+}
+
 .population {
 	color: #888;
 	font-size: 11px;
