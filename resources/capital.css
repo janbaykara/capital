@@ -48,3 +48,13 @@ path.line {
 	stroke-width: 2px;
 	fill: none;
 }
+
+.selector {
+	visibility: hidden;
+}
+
+svg:hover .selector {
+	visibility: visible;
+	stroke: black;
+	stroke-width: 1px;
+}

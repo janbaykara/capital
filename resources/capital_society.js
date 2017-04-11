@@ -57,7 +57,7 @@ var Society = new Vue({
 		statSets: function() {
 			return {
 				commodityStock: { value: this.commodityStock, 					floor: 0, ceiling: 0 },
-				totalPopulation: { value: this.population.length, 				floor: 0, ceiling: 0 },
+				population: { value: this.population.length, 					floor: 0, ceiling: 0 },
 				currentPopulation: { value: this.currentPopulation.length, 		floor: 0, ceiling: 0 },
 				workingPopulation: { value: this.workingPopulation.length, 		floor: 0, ceiling: 0 },
 				averageOffspring: { value: this.averageOffspring, 				floor: 0, ceiling: 0 },

@@ -26,8 +26,52 @@
 			<div class='f4 fl w-50'>{{averageWorkingDay|hrs}} average working hours</div>
 			<br style='clear: both; float: none'>
 			<br>
-			<area-chart :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'></area-chart>
+
+			<div class='fl w-33'>
+				<h3>Population</h3>
+				<area-chart :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling'
+					class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33'>
+				<h3>Socially Necessary Labour-Time</h3>
+				<area-chart :stats='statistics.LabourTimeSocNec' :ceil='statSets.LabourTimeSocNec.ceiling' :floor='statSets.LabourTimeSocNec.floor'
+					class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33'>
+				<h3>Average Hours Worked</h3>
+				<area-chart :stats='statistics.averageWorkingDay' :ceil='statSets.averageWorkingDay.ceiling' :floor='statSets.averageWorkingDay.floor'
+					class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33'>
+				<h3>Commodity stock</h3>
+				<area-chart :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling'
+					class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33'>
+				<h3>Daily Production</h3>
+				<area-chart :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling'
+					class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33'>
+				<h3>Daily Consumption</h3>
+				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling'
+					class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<br style='clear: both; float: none'>
 			<br>
+
 			<!-- D3 charts for: -->
 			<!-- * population growth -->
 			<!-- * Life expectancy -->
@@ -61,7 +105,7 @@
 
 		<template id='area-chart'>
 			<div>
-				<svg @mousemove="mouseover" :width="width" :height="height">
+				<svg :width="width" :height="height">
 					<g :style="{transform: 'translate(${margin.left}px, ${margin.top}px)'}">
 						<path class="area" :d="paths.area" />
 						<path class="line" :d="paths.line" />

@@ -18,9 +18,9 @@ var Human = Vue.extend({
 			chanceOfConception: 5,
 			chanceOfRandomDeath: 0,
 			hungerThreshold: 100,
-			hoursInDay: 23.99,
-			adultFoodAvg: 20,
-			babyFoodAvg: 20
+			hoursInDay: 12,
+			adultFoodAvg: 5,
+			babyFoodAvg: 5
 		};
 	},
 	computed: {

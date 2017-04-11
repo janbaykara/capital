@@ -11,13 +11,17 @@ Vue.component('area-chart', {
 			default: () => { return {
 				left: 0,
 				right: 0,
-				top: 10,
-				bottom: 10
+				top: 0,
+				bottom: 0
 			}},
 		},
 		ceil: {
 			type: Number,
 			default: 100
+		},
+		floor: {
+			type: Number,
+			default: 0
 		},
 	},
 	data() {
@@ -34,7 +38,6 @@ Vue.component('area-chart', {
 				x: null,
 				y: null,
 			},
-			displayData: [],
 			points: [],
 		};
 	},
@@ -57,8 +60,6 @@ Vue.component('area-chart', {
 	watch: {
 		stats: {
 			handler: function dataChanged(newData, oldData) {
-				console.log(oldData,newData);
-				this.displayData = newData;
 				this.update();
 			},
 			deep: true
@@ -84,7 +85,7 @@ Vue.component('area-chart', {
 		},
 		update() {
 			this.scaled.x.domain(d3.extent(this.stats, (d, i) => i));
-			this.scaled.y.domain([0, this.ceil]);
+			this.scaled.y.domain([this.floor, this.ceil]);
 			this.points = [];
 			for (const [i, d] of this.stats.entries()) {
 				this.points.push({
