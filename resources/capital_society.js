@@ -77,8 +77,9 @@ var Society = new Vue({
 	created: function() {
 		this.clockStart("In the beginning...");
 
-		window.addEventListener('keyup', function(event) {
+		window.addEventListener('keypress', function(event) {
 			if (event.keyCode == 32) {
+				event.preventDefault();
 				if(Society.clockTicking)
 					Society.clockPause()
 				else
