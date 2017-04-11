@@ -1,25 +1,29 @@
 var Human = Vue.extend({
 	data: function() {
 		return {
-			DNA: Array(20+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, 20),
-			age: 0,
-			alive: true,
-			hunger: 0,
-			savings: 0,
-			generation: 0,
-			offspring: [],
+			// UI
 			isHighlighted: false,
+			// static lifetime
+			generation: 0,
 			firstname: _.sample(firstnames),
 			lastname: _.sample(lastnames),
+			DNA: Array(20+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, 20),
+			// dynamic lifetime
+			alive: true,
+			age: 0,
+			hunger: 0,
+			savings: 0,
+			offspring: [],
 			LabourIndividualProductivity: Society.day > 1 ? Society.LabourTimeSocNec * _.random(1,1.25) : _.random(1,1.25),
+			// Human nature
 			ageAdult: Society.lifecycle ? 16 : 0,
 			ageInfertility: 55,
 			ageElderly: 75,
 			chanceOfConception: 5,
 			chanceOfRandomDeath: 0,
 			hungerThreshold: 100,
-			hoursInDay: 12,
-			adultFoodAvg: 5,
+			hoursInDay: 24,
+			adultFoodAvg: 10,
 			babyFoodAvg: 5
 		};
 	},
