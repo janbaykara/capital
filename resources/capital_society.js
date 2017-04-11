@@ -6,7 +6,7 @@ var Society = new Vue({
 		day: 0,
 		chanceOfCatastrophe: 0,
 		tickSpeed: 500,
-		speedOptions: [1000,500,250,100,10],
+		speedOptions: [1000,500,250,100,10,1],
 		lifecycle: true,
 		inheritance: false,
 		equalHours: false,

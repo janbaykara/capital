@@ -1,4 +1,8 @@
 /* UI */
+main {
+	max-width: 1280px;
+}
+
 .speedOption + .speedOption:before {
 	content: " / ";
 	color: #DDD;

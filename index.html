@@ -9,76 +9,19 @@
 	</head>
 	<body>
 		<main id='society' class='pv4 ph5 center'>
-			<h2 class='mb0'><i>Capital</i></h2>
+			<h1 class='mb0'><i>Capital</i></h1>
 			<div>
-				<span>
-					<span class='pointer fa' v-on:click='clockTicking ? clockPause() : clockStart()' v-bind:class="{'fa-pause': clockTicking, 'fa-play': !clockTicking}"></span>
-					<span class='b'>Day {{day}}</span>
+				<a class='dib fr no-underline gray' href='https://github.com/janbaykara/capital'>project repository <span class='fa fa-github'></span> </a>
+				<span class='b'>Day {{day}}&nbsp;</span>
+				<span class='pointer fa' v-on:click='clockTicking ? clockPause() : clockStart()' v-bind:class="{'fa-pause': clockTicking, 'fa-play': !clockTicking}"></span>
+				<span>&nbsp;Clock speed/day:</span>
+				<span class='gray'>
+					<span class='speedOption pointer' v-bind:class="{black: ms == tickSpeed}" v-for='ms in speedOptions' v-on:click="changeTickSpeed(ms)">{{ms/1000}}s&nbsp;</span>
 				</span>
-				<span class='gray'>&nbsp;Clock speed:
-					<span class='gray speedOption pointer' v-for='ms in speedOptions' v-on:click="changeTickSpeed(ms)">{{ms/1000}}s&nbsp;</span>
-				</span>
 			</div>
-			<br>
-			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(2)}})</span></div>
-			<br>
-			<div class='f3 fl w-50'>{{LabourTimeSocNec|£}} socially necessary labour time</div>
-			<div class='f3 fl w-50'>{{dailyProductTotal|d(1)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
-			<div class='f3 fl w-50'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
-			<div class='f3 fr w-50'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
-			<div class='f3 fl w-50'>{{commodityStock|d(0)}} surplus commodity pile</div>
-			<div class='f3 fr w-50'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
-			<br style='clear: both; float: none'>
-			<br>
-			<div class='f4 fl w-50' v-if='savings'>{{averageWealth|£}} average wealth accumulated</div>
-			<div class='f4 fl w-50'>{{averageWorkingDay|hrs}} average working hours</div>
-			<br style='clear: both; float: none'>
-			<br>
-
-			<div class='fl w-33'>
-				<h3>Population</h3>
-				<area-chart :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling'
-					class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33'>
-				<h3>Socially Necessary Labour-Time</h3>
-				<area-chart :stats='statistics.LabourTimeSocNec' :ceil='statSets.LabourTimeSocNec.ceiling' :floor='statSets.LabourTimeSocNec.floor'
-					class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33'>
-				<h3>Average Hours Worked</h3>
-				<area-chart :stats='statistics.averageWorkingDay' :ceil='statSets.averageWorkingDay.ceiling' :floor='statSets.averageWorkingDay.floor'
-					class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33'>
-				<h3>Commodity stock</h3>
-				<area-chart :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling'
-					class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33'>
-				<h3>Daily Production</h3>
-				<area-chart :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling'
-					class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33'>
-				<h3>Daily Consumption</h3>
-				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling'
-					class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<br style='clear: both; float: none'>
-			<br>
+			<div class='f3 mv3' v-if='savings'>{{averageWealth|£}} average wealth accumulated</div>
+			<div style='display: none;'>{{dailyFoodNeeded}}</div>
+			<!-- For the weirdest reason, the graphds don't display if dailyFoodNeeded isn't rendered above this line. -->
 
 			<!-- D3 charts for: -->
 			<!-- * population growth -->
@@ -92,6 +35,53 @@
 			<!-- * Wealth by hunger -->
 			<!-- * Productivity growth -->
 			<!-- * GINI coefficient -->
+
+			<div class='fl w-33 mv3'>
+				<div class='f4 b'>{{currentPopulation.length}} humans</div>
+				<div class='f5' v-if='lifecycle'>Average age {{averageAge|d(0)}}, {{averageOffspring|d(2)}}</div>
+				<area-chart :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33 mv3'>
+				<div class='f4 b'>Socially Necessary Labour-Time</div>
+				<div class='f5'>{{LabourTimeSocNec|£}}</div>
+				<area-chart :stats='statistics.LabourTimeSocNec' :ceil='statSets.LabourTimeSocNec.ceiling' :floor='statSets.LabourTimeSocNec.floor' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33 mv3'>
+				<div class='f4 b'>Average Hours Worked</div>
+				<div class='f5'>{{averageWorkingDay|hrs}}</div>
+				<area-chart :stats='statistics.averageWorkingDay' :ceil='statSets.averageWorkingDay.ceiling' :floor='statSets.averageWorkingDay.floor' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33 mv3'>
+				<div class='f4 b'>Stock of commodities</div>
+				<div class='f5'>{{commodityStock|d(0)}}</div>
+				<area-chart :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33 mv3'>
+				<div class='f4 b'>Daily Production</div>
+				<div class='f5'>{{dailyProductTotal|d(1)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
+				<div class='f5'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
+				<area-chart :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<div class='fl w-33 mv3'>
+				<div class='f4 b'>Daily Consumption</div>
+				<div class='f5'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
+				<div class='f5'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
+				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
+				</area-chart>
+			</div>
+
+			<br class='cf'>
+			<br>
 			<table class='population f6' cellpadding="0" cellspacing="0">
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
