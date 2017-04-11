@@ -56,6 +56,15 @@ var Society = new Vue({
 	},
 	created: function() {
 		this.clockStart("In the beginning...");
+
+		window.addEventListener('keyup', function(event) {
+			if (event.keyCode == 32) {
+				if(Society.clockTicking)
+					Society.clockPause()
+				else
+					Society.clockStart()
+			}
+		});
 	},
 	methods: {
 		clockStart: function(message) {

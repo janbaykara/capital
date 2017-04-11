@@ -4,12 +4,13 @@
 		<meta charset="utf-8">
 		<title>Capital: System and Suffering</title>
 		<link rel='stylesheet' href='libraries/tachyons.css' />
+		<link rel='stylesheet' href='libraries/font-awesome.css' />
 		<link rel='stylesheet' href='resources/capital.css' />
 	</head>
 	<body>
 		<main id='society' class='pv4 ph5 center'>
-			<h2 class='mb0'><i>Capital</i> Day {{day}}</h2>
-			<div class='pointer' v-on:click='clockTicking ? clockPause() : clockStart()'>{{clockTicking ? "Pause" : "Start"}}</div>
+			<h2 class='mb0'><i>Capital</i></h2>
+			<div><span class='pointer fa' v-on:click='clockTicking ? clockPause() : clockStart()' v-bind:class="{'fa-pause': clockTicking, 'fa-play': !clockTicking}"></span> <span class='b'>Day {{day}}</span></div>
 			<br>
 			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age of {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(1)}})</span></div>
 			<br>
