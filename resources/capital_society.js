@@ -52,9 +52,6 @@ var Society = new Vue({
 		},
 		dailyProductAvg: function() {
 			return _.meanBy(this.workingPopulation, 'dailyProduct');
-		},
-		commodityPrice: function() {
-			return this.LabourPowerSocAvgUnit;
 		}
 	},
 	created: function() {

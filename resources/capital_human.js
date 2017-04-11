@@ -28,7 +28,7 @@ var Human = Vue.extend({
 		hoursWorked: function() {
 			if(Society.equalHours) return this.hoursInDay;
 
-			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.commodityPrice;
+			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.LabourPowerSocAvgUnit;
 			return Math.min(this.hoursInDay, Math.max(0, foodMoneyRequired / this.hourlyRelativeProduct ) );
 		},
 		hourlyRelativeProduct: function() {
@@ -53,13 +53,13 @@ var Human = Vue.extend({
 		consume: function () {
 			var foodAvailable = Math.max(0, Society.commodityStock);
 			var foodWanted = Math.min(this.hunger, foodAvailable);
-			var foodAffordable = this.age < this.ageAdult ? foodWanted : (this.savings / Society.commodityPrice) // Kids don't pay for food
+			var foodAffordable = this.age < this.ageAdult ? foodWanted : (this.savings / Society.LabourPowerSocAvgUnit) // Kids don't pay for food
 			var foodToBuy = Math.min(foodAffordable, foodWanted)
 
 			Society.commodityStock -= foodToBuy;
 			this.hunger -= foodToBuy;
 			if(this.age >= this.ageAdult)
-				this.savings -= foodToBuy * Society.commodityPrice;
+				this.savings -= foodToBuy * Society.LabourPowerSocAvgUnit;
 		},
 		improve: function() {
 			// # Overproducers should be able to improve easier (£ investment)
