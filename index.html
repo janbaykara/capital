@@ -12,7 +12,7 @@
 			<h2 class='mb0'><i>Capital</i></h2>
 			<div><span class='pointer fa' v-on:click='clockTicking ? clockPause() : clockStart()' v-bind:class="{'fa-pause': clockTicking, 'fa-play': !clockTicking}"></span> <span class='b'>Day {{day}}</span></div>
 			<br>
-			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age of {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(1)}})</span></div>
+			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age of {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(2)}})</span></div>
 			<br>
 			<div class='f3 fl w-50'>{{LabourTimeSocNec|£}} social price of labour/commodity unit</div>
 			<div class='f3 fl w-50'>{{dailyProductTotal|d(1)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
@@ -42,7 +42,7 @@
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
 					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0.01, lazy: person.LabourIndividualProductivity < LabourTimeSocNec, poor: person.savings < 0.01, young: person.age < person.ageAdult, old: person.age >= person.ageElderly, overworked: person.hoursWorked == person.hoursInDay, dead: !person.alive }">
-					<td class='ph1 tr code'>{{person.DNA}}</td>
+					<td class='pr1 tr code'>{{person.DNA}}</td>
 					<td class='ph1 tr name'>{{person.firstname}} <b>{{person.lastname}}</b></td>
 					<td class='ph1 age' v-if="lifecycle" >(Gen {{person.generation}}, aged <b>{{person.age}}</b>)</td>
 					<td class='ph1'>(<b>{{person.LabourIndividualProductivity|d(3)}}</b> productivity,</td>
@@ -52,7 +52,7 @@
 					<td class='ph1 tr'>for <b>{{person.hourlyRelativeProduct * person.hoursWorked|£}}</b> daily</td>
 					<td class='ph1 b'>&middot;</td>
 					<td class='ph1 tr savings' v-if='savings'>Savings: <b>{{person.savings|£}}</b></td>
-					<td class='ph1 tr hunger'>(<b>{{person.hunger|d(0)}}% hungry</b>)</td>
+					<td class='pl1 tr hunger'>(<b>{{person.hunger|d(0)}}% hungry</b>)</td>
 				</tr>
 			</table>
 		</main>
