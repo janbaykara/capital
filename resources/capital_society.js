@@ -90,9 +90,11 @@ var Society = new Vue({
 	methods: {
 		recordHistory: function() {
 			for (var category in this.statSets) {
-				if (this.statSets.hasOwnProperty(category)) {
-					if(!this.statistics[category])
+				if (this.statSets.hasOwnProperty(category) && typeof this.statSets[category].value == 'number' && !isNaN(this.statSets[category].value)) {
+					if(!this.statistics[category]) {
 						Vue.set(this.statistics, category, []);
+						this.statSets[category].name = category;
+					}
 
 					this.statistics[category].push(this.statSets[category].value);
 					this.statSets[category].floor = Math.min.apply(null, this.statistics[category]);
