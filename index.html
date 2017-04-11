@@ -14,7 +14,7 @@
 			<br>
 			<div class='f3'>{{currentPopulation.length}} humans<span v-if='lifecycle'> (average age {{averageAge|d(0)}}, average offspring per person {{averageOffspring|d(2)}})</span></div>
 			<br>
-			<div class='f3 fl w-50'>{{LabourTimeSocNec|£}} socially necessary labour time, per commodity</div>
+			<div class='f3 fl w-50'>{{LabourTimeSocNec|£}} socially necessary labour time</div>
 			<div class='f3 fl w-50'>{{dailyProductTotal|d(1)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
 			<div class='f3 fl w-50'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
 			<div class='f3 fr w-50'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
@@ -25,6 +25,8 @@
 			<div class='f4 fl w-50' v-if='savings'>{{averageWealth|£}} average wealth accumulated</div>
 			<div class='f4 fl w-50'>{{averageWorkingDay|hrs}} average working hours</div>
 			<br style='clear: both; float: none'>
+			<br>
+			<area-chart :stats='statistics.LabourTimeSocNec' class='ba b--gray' style='width: 300px; height: 150px;'></area-chart>
 			<br>
 			<!-- D3 charts for: -->
 			<!-- * population growth -->
@@ -57,10 +59,10 @@
 			</table>
 		</main>
 
-		<template>
+		<template id='area-chart'>
 			<div>
 				<svg @mousemove="mouseover" :width="width" :height="height">
-					<g :style="{transform: `translate(${margin.left}px, ${margin.top}px)`}">
+					<g :style="{transform: 'translate(${margin.left}px, ${margin.top}px)'}">
 						<path class="area" :d="paths.area" />
 						<path class="line" :d="paths.line" />
 						<path class="selector" :d="paths.selector" />
@@ -74,6 +76,7 @@
 		<script src='libraries/accounting.js'></script>
 		<script src='libraries/d3.js'></script>
 		<script src='libraries/vue.js'></script>
+		<script src='resources/capital_graph.js'></script>
 		<script src='resources/capital_helpers.js'></script>
 		<script src='resources/capital_human.js'></script>
 		<script src='resources/capital_society.js'></script>

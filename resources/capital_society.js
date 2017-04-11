@@ -5,13 +5,29 @@ var Society = new Vue({
 		commodityStock: 0,
 		day: 0,
 		chanceOfCatastrophe: 0,
-		tickSpeed: 500,
+		tickSpeed: 50,
 		lifecycle: true,
 		inheritance: false,
 		equalHours: false,
 		savings: false,
 		clock: null,
-		clockTicking: false
+		clockTicking: false,
+		statistics: {},
+		statSets: [
+			'currentPopulation',
+			'workingPopulation',
+			'averageOffspring',
+			'averageAge',
+			'averageWealth',
+			'averageHunger',
+			'dailyHunger',
+			'dailyFoodNeeded',
+			'averageWorkingDay',
+			'LabourPowerTotal',
+			'LabourTimeSocNec',
+			'dailyProductTotal',
+			'dailyProductAvg'
+		]
 	},
 	computed: {
 		currentPopulation: function() {
@@ -98,6 +114,18 @@ var Society = new Vue({
 			if(_.random(0,100) < Society.chanceOfCatastrophe) {
 				Society.catastrophe();
 			}
+
+			this.recordHistory();
+		},
+		recordHistory: function() {
+			/* Statistics */
+			var that = this;
+			this.statSets.forEach(function(historicData) {
+				if(!Society.statistics[historicData]) {
+					Vue.set(that.statistics, historicData, []);
+				}
+				Society.statistics[historicData].push(Society[historicData]);
+			});
 		},
 		catastrophe: function() {
 			console.log("We're all gonna die!")
