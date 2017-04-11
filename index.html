@@ -75,7 +75,7 @@
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Daily Consumption</div>
 				<div class='f5'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
-				<div class='f5'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|%(1)}} avg)</div>
+				<div class='f5'>{{dailyHunger|d(1)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
 				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
 			</div>
