@@ -12,22 +12,7 @@ var Society = new Vue({
 		savings: false,
 		clock: null,
 		clockTicking: false,
-		statistics: {},
-		statSets: [
-			'currentPopulation',
-			'workingPopulation',
-			'averageOffspring',
-			'averageAge',
-			'averageWealth',
-			'averageHunger',
-			'dailyHunger',
-			'dailyFoodNeeded',
-			'averageWorkingDay',
-			'LabourPowerTotal',
-			'LabourTimeSocNec',
-			'dailyProductTotal',
-			'dailyProductAvg'
-		]
+		statistics: {}
 	},
 	computed: {
 		currentPopulation: function() {
@@ -68,6 +53,25 @@ var Society = new Vue({
 		},
 		dailyProductAvg: function() {
 			return _.meanBy(this.workingPopulation, 'dailyProduct');
+		},
+		statSets: function() {
+			return {
+				commodityStock: this.commodityStock,
+				totalPopulation: this.population.length,
+				currentPopulation: this.currentPopulation.length,
+				workingPopulation: this.workingPopulation.length,
+				averageOffspring: this.averageOffspring,
+				averageAge: this.averageAge,
+				averageWealth: this.averageWealth,
+				averageHunger: this.averageHunger,
+				dailyHunger: this.dailyHunger,
+				dailyFoodNeeded: this.dailyFoodNeeded,
+				averageWorkingDay: this.averageWorkingDay,
+				LabourPowerTotal: this.LabourPowerTotal,
+				LabourTimeSocNec: this.LabourTimeSocNec,
+				dailyProductTotal: this.dailyProductTotal,
+				dailyProductAvg: this.dailyProductAvg
+			}
 		}
 	},
 	created: function() {
@@ -83,6 +87,16 @@ var Society = new Vue({
 		});
 	},
 	methods: {
+		recordHistory: function() {
+			for (var dataset in this.statSets) {
+				if (this.statSets.hasOwnProperty(dataset)) {
+					if(!this.statistics[dataset])
+						Vue.set(this.statistics, dataset, []);
+
+					this.statistics[dataset].push(this.statSets[dataset]);
+				}
+			}
+		},
 		clockStart: function(message) {
 			this.clock = setInterval(function() {
 				Society.newDay();
@@ -116,16 +130,6 @@ var Society = new Vue({
 			}
 
 			this.recordHistory();
-		},
-		recordHistory: function() {
-			/* Statistics */
-			var that = this;
-			this.statSets.forEach(function(historicData) {
-				if(!Society.statistics[historicData]) {
-					Vue.set(that.statistics, historicData, []);
-				}
-				Society.statistics[historicData].push(Society[historicData]);
-			});
 		},
 		catastrophe: function() {
 			console.log("We're all gonna die!")
