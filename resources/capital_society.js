@@ -6,7 +6,7 @@ var Society = new Vue({
 		inheritance: true,
 		equalHours: false,
 		banking: true,
-		chanceOfCatastrophe: 0.0000001,
+		catastrophes: false,
 		// time
 		day: 0,
 		clock: null,
@@ -112,6 +112,8 @@ var Society = new Vue({
 			}
 		},
 		clockStart: function(message) {
+			if(this.currentPopulation.length == 0) return false; // Give up already...
+
 			this.clock = setInterval(function() {
 				Society.newDay();
 			}, this.tickSpeed);
@@ -144,8 +146,8 @@ var Society = new Vue({
 				person.live();
 			});
 
-			if(_.random(0,100) < Society.chanceOfCatastrophe) {
-				Society.catastrophe();
+			if(this.catastrophes && _.random(0,100) < 0.00000001) {
+				this.catastrophe();
 			}
 
 			this.recordHistory();
@@ -153,14 +155,14 @@ var Society = new Vue({
 		catastrophe: function() {
 			console.log("We're all gonna die!")
 			var theIncident = _.sample([
-				'{{name}} was killed by a terrible earthquake! D:',
-				'{{name}} was killed by deadly Zika virus! D:',
-				'{{name}} was killed by a deadly killer bees! D:',
-				'{{name}} drowned in a flood of frogs! D:',
-				'{{name}} was eaten by a swarm of locusts! D:',
+				'{{name}} was crushed in a terrible earthquake! D:',
+				'{{name}} succumbed to the Zika virus! D:',
+				'{{name}} was killed by deadly killer bees! D:',
+				'{{name}} drowned in a catastrophic flood! D:',
+				'{{name}} was eaten alive in a swarm of locusts! D:',
 			]);
 
-			Society.currentPopulation.forEach(function(person) {
+			this.currentPopulation.forEach(function(person) {
 				if(_.random(0,100) < _.random(0,100)) {
 					person.die(theIncident);
 				}
