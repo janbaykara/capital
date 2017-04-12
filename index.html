@@ -36,49 +36,47 @@
 			<!-- * Productivity growth -->
 			<!-- * GINI coefficient -->
 
-			<div class='fl w-33 mv3'>
-				<div class='f4 b'>{{currentPopulation.length}} humans</div>
-				<div class='f5' v-if='lifecycle'>Average age {{averageAge|d(0)}}, {{averageOffspring|d(2)}} kids per person</div>
-				<area-chart :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
+
+			<div class='fl w-33 mv3 twocharts'>
+				<div class='f4 b'>Daily Production</div>
+				<div class='f5'>{{dailyProductTotal|d(0)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
+				<div class='f5'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
+				<div class='f4 b'>Daily Consumption</div>
+				<div class='f5'>{{dailyFoodNeeded|d(0)}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
+				<div class='f5'>{{dailyHunger|d(0)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
+				<div class='mt1 chartContrast relative' style='width: 300px; height: 150px;'>
+					<area-chart class='absolute ba b--gray' :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling' style='width: 300px; height: 150px;'></area-chart>
+					<area-chart class='absolute ba b--gray' :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' style='width: 300px; height: 150px;'></area-chart>
+				</div>
 			</div>
 
 			<div class='fl w-33 mv3'>
-				<div class='f4 b'>{{workingPopulation.length}} of working age</div>
-				<div class='f5' v-if='lifecycle'>{{workingPopulation.length/currentPopulation.length|%(0)}} of population</div>
-				<area-chart :stats='statistics.workingPopulation' :ceil='statSets.currentPopulation.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
+				<div class='f4 b'>{{currentPopulation.length}} humans</div>
+				<div class='f5' v-if='lifecycle'>Average age {{averageAge|d(0)}}, {{averageOffspring|d(2)}} kids per person</div>
+				<div class='mt1 chartSubcategories relative' style='width: 300px; height: 150px;'>
+					<div class='f5 absolute top-1 left-1 z-999' v-if='lifecycle'>{{workingPopulation.length/currentPopulation.length|%(0)}} working population</div>
+					<area-chart :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling' class='ba b--gray absolute z-1' style='width: 300px; height: 150px;'></area-chart>
+					<area-chart :stats='statistics.workingPopulation' :ceil='statSets.currentPopulation.ceiling' class='ba b--gray absolute z-1' style='width: 300px; height: 150px;'></area-chart>
+				</div>
 			</div>
 
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Avg Productivity</div>
 				<div class='f5'>{{productivityAvg|d(2)}} commodities/hr</div>
-				<area-chart :stats='statistics.productivityAvg' :ceil='statSets.productivityAvg.ceiling' :floor='statSets.productivityAvg.floor' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
+				<area-chart class='mt1 ba b--gray' :stats='statistics.productivityAvg' :ceil='statSets.productivityAvg.ceiling' :floor='statSets.productivityAvg.floor' style='width: 300px; height: 150px;'></area-chart>
 			</div>
 
 			<div class='fl w-33 mv3'>
-				<div class='f4 b'>Daily Production</div>
-				<div class='f5'>{{dailyProductTotal|d(0)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
-				<div class='f5'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
-				<area-chart :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
-			</div>
-
-			<div class='fl w-33 mv3'>
-				<div class='f4 b'>Daily Consumption</div>
-				<div class='f5'>{{dailyFoodNeeded|d(0)}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
-				<div class='f5'>{{dailyHunger|d(0)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
-				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
+				<div class='f4 b'>Commodity price</div>
+				<div class='f5'>{{commodityPrice|d(2)}} hrs of socially necessary labour</div>
+				<area-chart class='mt1 ba b--gray' :stats='statistics.commodityPrice' :ceil='statSets.commodityPrice.ceiling' :floor='statSets.commodityPrice.floor' style='width: 300px; height: 150px;'></area-chart>
 			</div>
 
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Stock of commodities</div>
 				<div class='f5'>{{commodityStock|d(0)}}</div>
 				<div class='f5'>Avg of {{commodityStock/currentPopulation.length|d(0)}} commodities per person</div>
-				<area-chart :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
-				</area-chart>
+				<area-chart class='mt1 ba b--gray' :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' style='width: 300px; height: 150px;'></area-chart>
 			</div>
 
 			<br class='cf'>
@@ -103,11 +101,11 @@
 		</main>
 
 		<template id='area-chart'>
-			<div>
+			<div class='area-chart'>
 				<svg :width="width" :height="height">
 					<g :style="{transform: 'translate(${margin.left}px, ${margin.top}px)'}">
-						<path class="area" :d="paths.area" />
-						<path class="line" :d="paths.line" />
+						<path class="area" :d="paths.area" style='fill: ${fill}'/>
+						<path class="line" :d="paths.line" style='stroke: ${stroke}'/>
 						<path class="selector" :d="paths.selector" />
 					</g>
 				</svg>

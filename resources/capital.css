@@ -57,14 +57,9 @@ main {
 
 /* Graph */
 
-path.area {
-	fill: orange;
-}
-
-path.line {
-	stroke: black;
-	stroke-width: 2px;
-	fill: none;
+svg {
+	margin-top: -1px;
+	margin-left: -1px;
 }
 
 .selector {
@@ -75,4 +70,30 @@ svg:hover .selector {
 	visibility: visible;
 	stroke: black;
 	stroke-width: 1px;
+}
+
+path.area {
+	fill: #ff4136;
+}
+
+path.line {
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+}
+
+.chartContrast .area-chart:first-child path.area {
+    fill: #00449e;
+	opacity: 0.5;
+}
+.chartContrast .area-chart:last-child path.area {
+    opacity: 0.5;
+}
+
+.chartSubcategories .area-chart:first-child path.area {
+
+}
+.chartSubcategories .area-chart:last-child path.area {
+    fill: none;
+	stroke-width: 0.5px;
 }
