@@ -95,5 +95,8 @@ path.line {
 }
 .chartSubcategories .area-chart:last-child path.area {
     fill: none;
-	stroke-width: 0.5px;
+}
+.chartSubcategories .area-chart:last-child path.line {
+	stroke-dasharray: 2,1;
+    stroke-width: 1.5px;
 }
