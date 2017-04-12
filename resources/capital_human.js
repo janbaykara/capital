@@ -32,8 +32,8 @@ var Human = Vue.extend({
 		hoursWorked: function() {
 			if(!this.workingAge) return 0;
 			if(Society.equalHours) return this.hoursInDay;
-
-			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.commodityPrice;
+									// yesterday + today				  + family planning
+			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired + (this.reproductiveAge ? this.babyFoodAvg : 0)) * Society.commodityPrice;
 			return Math.min(Society.hoursWorkMax, Math.max(Society.hoursWorkMin, foodMoneyRequired / this.hourlyRelativeProduct ) );
 		},
 		hourlyRelativeProduct: function() {
@@ -47,6 +47,9 @@ var Human = Vue.extend({
 		},
 		workingAge: function() {
 			return Society.ageWorkMax >= this.age && this.age >= Society.ageWorkMin;
+		},
+		reproductiveAge: function() {
+			return this.ageInfertility >= this.age && this.age >= this.agePuberty;
 		}
 	},
 	methods: {
