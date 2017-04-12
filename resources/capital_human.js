@@ -19,12 +19,12 @@ var Human = Vue.extend({
 			agePuberty: Society.lifecycle ? 16 : 0,
 			ageInfertility: 55,
 			ageLimit: 75,
-			chanceOfConception: 5,
+			chanceOfConception: 3.5,
 			chanceOfRandomDeath: 0,
 			hungerThreshold: 100,
 			hoursInDay: 24,
-			adultFoodAvg: 5,
-			babyFoodAvg: 2.5
+			adultFoodAvg: 10,
+			babyFoodAvg: 10
 		};
 	},
 	computed: {
