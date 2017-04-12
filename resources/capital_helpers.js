@@ -1,7 +1,11 @@
 // Config
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
-Vue.filter('%', function (value,x) {
+Vue.filter('v', function (value, x = 2) {
+	var commaFormat = new Intl.NumberFormat('en-GB', {minimumFractionDigits: x, maximumFractionDigits: x});
+    return commaFormat.format(value)+" vu";
+});
+
 Vue.filter('%', function (value,x = 2) {
     return (value*100).toFixed(x)+"%"
 });

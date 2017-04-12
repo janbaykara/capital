@@ -94,9 +94,9 @@
 					<td class='ph1 tr productivityIndividual'><b>{{person.hourlyRelativeProduct|%(0)}}</b> of society)</td>
 					<td class='ph1 hoursWorked employmentStats'>works <b>{{person.hoursWorked|hrs}} hrs</b></td>
 					<td class='ph1 tr employmentStats'>and produces <b>{{person.dailyProduct|d(1)}}</b></td>
-					<td class='ph1 tr employmentStats'>for <b>{{person.hourlyRelativeProduct * person.hoursWorked|d(2)}}</b> daily</td>
+					<td class='ph1 tr employmentStats'>for <b>{{person.hourlyRelativeProduct * person.hoursWorked|v}}</b> daily</td>
 					<td class='ph1 b'>&middot;</td>
-					<td class='ph1 tr savings' v-if='banking'>Savings: <b>{{person.savings|d(2)}}</b></td>
+					<td class='ph1 tr savings' v-if='banking'>Savings: <b>{{person.savings|v}}</b></td>
 					<td class='pl1 tr hunger'>(<b>{{person.hunger|d(0)}}% hungry</b>)</td>
 				</tr>
 			</table>
