@@ -1,0 +1,13 @@
+{
+  "short_name": "Capital",
+  "name": "Capital: System and Suffering",
+  "description": "An economy simulator.",
+  "background_color": "#ff4136",
+  "theme_color": "#ff4136",
+  "display": "standalone",
+  "icons": [{
+      "src": "capital.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }]
+}
