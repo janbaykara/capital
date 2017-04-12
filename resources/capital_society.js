@@ -3,9 +3,9 @@ var Society = new Vue({
 	data: {
 		// config
 		lifecycle: true,
-		inheritance: true,
+		inheritance: false,
+		banking: false,
 		equalHours: false,
-		banking: true,
 		catastrophes: false,
 		// time
 		day: 0,
@@ -20,7 +20,7 @@ var Society = new Vue({
 		// laws
 		ageWorkMin: 16,
 		ageWorkMax: 120,
-		hoursWorkMin: 4,
+		hoursWorkMin: 0,
 		hoursWorkMax: 12
 	},
 	computed: {
