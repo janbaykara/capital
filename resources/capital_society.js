@@ -18,7 +18,9 @@ var Society = new Vue({
 		commodityStock: 0,
 		statistics: {},
 		// laws
-		hoursWorkMin: 0,
+		ageWorkMin: 16,
+		ageWorkMax: 120,
+		hoursWorkMin: 4,
 		hoursWorkMax: 12
 	},
 	computed: {
@@ -26,10 +28,10 @@ var Society = new Vue({
 			return _(this.population).filter('alive').orderBy(['LabourIndividualProductivity'], ['desc']).value();
 		},
 		workingPopulation: function() {
-			return _(this.currentPopulation).filter((p)=>p.age >= p.ageAdult).value();
+			return _(this.currentPopulation).filter((p)=>p.workingAge).value();
 		},
 		averageOffspring: function() {
-			return _.chain(this.population).filter((p)=>p.age >= p.ageAdult).meanBy((p)=>p.offspring.length).value();
+			return _.chain(this.population).filter((p)=>p.age >= p.agePuberty).meanBy((p)=>p.offspring.length).value();
 		},
 		averageAge: function() {
 			return _.meanBy(this.currentPopulation, 'age');

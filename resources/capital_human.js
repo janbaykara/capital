@@ -16,21 +16,21 @@ var Human = Vue.extend({
 			offspring: [],
 			LabourIndividualProductivity: Society.day > 1 ? Society.LabourTimeSocNec * _.random(1,1.25) : _.random(1,1.25),
 			// Human nature
-			ageAdult: Society.lifecycle ? 16 : 0,
+			agePuberty: Society.lifecycle ? 16 : 0,
 			ageInfertility: 55,
-			ageElderly: 75,
+			ageLimit: 75,
 			chanceOfConception: 5,
 			chanceOfRandomDeath: 0,
 			hungerThreshold: 100,
 			hoursInDay: 24,
-			adultFoodAvg: 10,
-			babyFoodAvg: 5
+			adultFoodAvg: 5,
+			babyFoodAvg: 2.5
 		};
 	},
 	computed: {
 		name: function() { return this.firstname+" "+this.lastname; },
 		hoursWorked: function() {
-			if(this.age < this.ageAdult) return 0;
+			if(!this.workingAge) return 0;
 			if(Society.equalHours) return this.hoursInDay;
 
 			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.LabourTimeSocNec;
@@ -43,12 +43,15 @@ var Human = Vue.extend({
 			return this.hoursWorked * this.LabourIndividualProductivity;
 		},
 		dailyFoodRequired: function() {
-			return this.age < this.ageAdult ? this.babyFoodAvg : this.adultFoodAvg
+			return this.age < this.agePuberty ? this.babyFoodAvg : this.adultFoodAvg
+		},
+		workingAge: function() {
+			return Society.ageWorkMax >= this.age && this.age >= Society.ageWorkMin;
 		}
 	},
 	methods: {
 		produce: function() {
-			if(this.age >= this.ageAdult) {
+			if(this.workingAge) {
 				Society.commodityStock += this.dailyProduct;
 				this.savings += this.hourlyRelativeProduct * this.hoursWorked; // Share of today's social wealth (combined congealed labour of society)
 			}
@@ -58,20 +61,19 @@ var Human = Vue.extend({
 		consume: function () {
 			var foodAvailable = Math.max(0, Society.commodityStock);
 			var foodWanted = Math.min(this.hunger, foodAvailable);
-			var foodAffordable = this.age < this.ageAdult ? foodWanted : (this.savings / Society.LabourTimeSocNec) // Kids don't pay for food
+			var foodAffordable = this.workingAge ? this.savings / Society.LabourTimeSocNec : foodWanted // Kids and pensioners don't pay for food
 			var foodToBuy = Math.min(foodAffordable, foodWanted)
 
 			Society.commodityStock -= foodToBuy;
 			this.hunger -= foodToBuy;
-			if(this.age >= this.ageAdult)
-				this.savings -= foodToBuy * Society.LabourTimeSocNec;
+			if(this.workingAge) this.savings -= foodToBuy * Society.LabourTimeSocNec;
 		},
 		improve: function() {
 			// # Overproducers should be able to improve easier (£ investment)
 			prodIncChance = (Math.pow(Society.LabourTimeSocNec,1.5) / this.LabourIndividualProductivity) * 10
 			// prodIncChance *= this.wage/10;
 
-			if(this.age >= this.ageAdult && _.random(0,100) < 0.05) { // Eureka!
+			if(this.workingAge && _.random(0,100) < 0.05) { // Eureka!
 				prodInc = 0.1
 				// console.log(this.name+": \"Eureka!\"")
 			} else {
@@ -87,7 +89,7 @@ var Human = Vue.extend({
 
 			if(
 				Society.workingPopulation.length >= 2
-				&& this.age >= (this.ageAdult * _.random(0.8,1.2))
+				&& this.age >= (this.agePuberty * _.random(0.8,1.2))
 				&& this.age < (this.ageInfertility * _.random(0.8,1.2))
 			) {
 				var x = new Human();
@@ -130,7 +132,7 @@ var Human = Vue.extend({
 			if(this.hunger >= this.hungerThreshold && _.random(0,100) < 30) {
 				this.die("{{name}} starved of poverty :'(");
 			} else // Old age
-			if(this.age > this.ageElderly * _.random(0.8,1.35)) {
+			if(this.age > this.ageLimit * _.random(0.8,1.35)) {
 				if(_.random(0,100) < 10) {
 					this.die("{{name}} died naturally at the old age of {{age}}");
 				}
@@ -141,7 +143,7 @@ var Human = Vue.extend({
 
 				// Reproduce chance
 				if( Society.lifecycle
-				&& (Society.commodityStock/Society.currentPopulation.length) >= this.ageAdult
+				&& (Society.commodityStock/Society.currentPopulation.length) >= this.agePuberty
 				&& _.random(0,100) < this.chanceOfConception ) {
 					this.reproduce();
 				}

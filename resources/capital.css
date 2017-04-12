@@ -14,10 +14,6 @@ main {
 	background: yellow !important;
 }
 
-.dead * {
-    color: pink !important;
-}
-
 .population {
 	color: #888;
 	font-size: 11px;
@@ -25,6 +21,10 @@ main {
 
 .population b {
 	color: #555;
+}
+
+.dead * {
+    color: pink !important;
 }
 
 .hungry > .hunger b {
@@ -49,6 +49,10 @@ main {
 
 .overworked > .hoursWorked b {
 	color: red;
+}
+
+.unemployed > .employmentStats b {
+	color: #AAA;
 }
 
 /* Graph */
