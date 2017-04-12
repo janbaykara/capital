@@ -25,7 +25,7 @@ var Society = new Vue({
 	},
 	computed: {
 		currentPopulation: function() {
-			return _(this.population).filter('alive').orderBy(['LabourIndividualProductivity'], ['desc']).value();
+			return _(this.population).filter('alive').orderBy(['productivityIndividual'], ['desc']).value();
 		},
 		workingPopulation: function() {
 			return _(this.currentPopulation).filter((p)=>p.workingAge).value();
@@ -51,11 +51,11 @@ var Society = new Vue({
 		averageWorkingDay: function() {
 			return _.meanBy(this.workingPopulation, 'hoursWorked');
 		},
-		LabourPowerTotal: function() {
-			return _.sumBy(this.workingPopulation, 'LabourIndividualProductivity');
+		productivityTotal: function() {
+			return _.sumBy(this.workingPopulation, 'productivityIndividual');
 		},
-		LabourTimeSocNec: function() { // value of commodity
-			return _.meanBy(this.workingPopulation, 'LabourIndividualProductivity');
+		productivityAvg: function() { // value of commodity
+			return _.meanBy(this.workingPopulation, 'productivityIndividual');
 		},
 		dailyProductTotal: function() {
 			return _.sumBy(this.workingPopulation, 'dailyProduct');
@@ -77,7 +77,7 @@ var Society = new Vue({
 				dailyFoodNeeded: { value: this.dailyFoodNeeded, 				floor: 0, ceiling: 0 },
 				averageWorkingDay: { value: this.averageWorkingDay, 			floor: 0, ceiling: 0 },
 				LabourPowerTotal: { value: this.LabourPowerTotal, 				floor: 0, ceiling: 0 },
-				LabourTimeSocNec: { value: this.LabourTimeSocNec, 				floor: 0, ceiling: 0 },
+				productivityAvg: { value: this.productivityAvg, 				floor: 0, ceiling: 0 },
 				dailyProductTotal: { value: this.dailyProductTotal, 			floor: 0, ceiling: 0 },
 				dailyProductAvg: { value: this.dailyProductAvg, 				floor: 0, ceiling: 0 }
 			}

@@ -19,7 +19,7 @@
 					<span class='speedOption pointer' v-bind:class="{black: ms == tickSpeed}" v-for='ms in speedOptions' v-on:click="changeTickSpeed(ms)">{{ms/1000}}s&nbsp;</span>
 				</span>
 			</div>
-			<div class='f3 mv3' v-if='banking'>{{averageWealth|£}} average wealth accumulated</div>
+			<!-- <div class='f3 mv3' v-if='banking'>{{averageWealth|£}} average wealth accumulated</div> -->
 			<div style='display: none;'>{{dailyFoodNeeded}}</div>
 			<!-- For the weirdest reason, the graphds don't display if dailyFoodNeeded isn't rendered above this line. -->
 
@@ -51,15 +51,15 @@
 			</div>
 
 			<div class='fl w-33 mv3'>
-				<div class='f4 b'>Socially Necessary Labour-Time</div>
-				<div class='f5'>{{LabourTimeSocNec|£}}</div>
-				<area-chart :stats='statistics.LabourTimeSocNec' :ceil='statSets.LabourTimeSocNec.ceiling' :floor='statSets.LabourTimeSocNec.floor' class='ba b--gray' style='width: 300px; height: 150px;'>
+				<div class='f4 b'>Avg Productivity</div>
+				<div class='f5'>{{productivityAvg|d(2)}} commodities/hr</div>
+				<area-chart :stats='statistics.productivityAvg' :ceil='statSets.productivityAvg.ceiling' :floor='statSets.productivityAvg.floor' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
 			</div>
 
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Daily Production</div>
-				<div class='f5'>{{dailyProductTotal|d(1)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
+				<div class='f5'>{{dailyProductTotal|d(0)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
 				<div class='f5'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
 				<area-chart :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
@@ -67,7 +67,7 @@
 
 			<div class='fl w-33 mv3'>
 				<div class='f4 b'>Daily Consumption</div>
-				<div class='f5'>{{dailyFoodNeeded}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
+				<div class='f5'>{{dailyFoodNeeded|d(0)}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
 				<div class='f5'>{{dailyHunger|d(0)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
 				<area-chart :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' class='ba b--gray' style='width: 300px; height: 150px;'>
 				</area-chart>
@@ -86,12 +86,12 @@
 			<table class='population f6' cellpadding="0" cellspacing="0">
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
-					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0.01, lazy: person.LabourIndividualProductivity < LabourTimeSocNec, poor: person.savings < 0.01, young: person.age < person.agePuberty, old: person.age >= person.ageLimit, unemployed: person.hoursWorked < 0.1, overworked: person.hoursWorked == hoursWorkMax, dead: !person.alive }">
+					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0.01, lazy: person.productivityIndividual < productivityAvg, poor: person.savings < 0.01, young: person.age < person.agePuberty, old: person.age >= person.ageLimit, unemployed: person.hoursWorked < 0.1, overworked: person.hoursWorked == hoursWorkMax, dead: !person.alive }">
 					<td class='pr1 tr code'>{{person.DNA}}</td>
 					<td class='ph1 tr name'>{{person.firstname}} <b>{{person.lastname}}</b></td>
 					<td class='ph1 age' v-if="lifecycle" >(Gen {{person.generation}}, aged <b>{{person.age}}</b>)</td>
-					<td class='ph1'>(<b>{{person.LabourIndividualProductivity|d(3)}}</b> productivity,</td>
-					<td class='ph1 tr LabourIndividualProductivity'><b>{{person.hourlyRelativeProduct|d(2)}}</b> × avg)</td>
+					<td class='ph1'>(<b>{{person.productivityIndividual|d(3)}}</b> productivity,</td>
+					<td class='ph1 tr productivityIndividual'><b>{{person.hourlyRelativeProduct|%(0)}}</b> of society)</td>
 					<td class='ph1 hoursWorked employmentStats'>works <b>{{person.hoursWorked|hrs}} hrs</b></td>
 					<td class='ph1 tr employmentStats'>and produces <b>{{person.dailyProduct|d(1)}}</b></td>
 					<td class='ph1 tr employmentStats'>for <b>{{person.hourlyRelativeProduct * person.hoursWorked|d(2)}}</b> daily</td>
