@@ -120,7 +120,7 @@ var Society = new Vue({
 			}
 		},
 		clockStart: function(message) {
-			if(this.currentPopulation.length == 0) return false; // Give up already...
+			if(this.clock && this.currentPopulation.length == 0) return false; // Give up already...
 
 			this.clock = setInterval(function() {
 				Society.newDay();
