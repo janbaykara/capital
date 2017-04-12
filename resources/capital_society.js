@@ -138,11 +138,11 @@ var Society = new Vue({
 				return false;
 			}
 
-			console.group("Day "+this.day,this.LabourTimeSocNec);
+			console.group("Day "+this.day,this.productivityAvg);
 
-			Society.day++;
+			this.day++;
 
-			Society.currentPopulation.forEach(function(person) {
+			this.currentPopulation.forEach(function(person) {
 				person.live();
 			});
 
