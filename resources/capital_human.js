@@ -33,7 +33,7 @@ var Human = Vue.extend({
 			if(!this.workingAge) return 0;
 			if(Society.equalHours) return this.hoursInDay;
 
-			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.productivityAvg;
+			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired) * Society.commodityPrice;
 			return Math.min(Society.hoursWorkMax, Math.max(Society.hoursWorkMin, foodMoneyRequired / this.hourlyRelativeProduct ) );
 		},
 		hourlyRelativeProduct: function() {
@@ -53,7 +53,7 @@ var Human = Vue.extend({
 		produce: function() {
 			if(this.workingAge) {
 				Society.commodityStock += this.dailyProduct;
-				this.savings += this.hourlyRelativeProduct * this.hoursWorked; // Share of today's social wealth (combined congealed labour of society)
+				this.savings += this.dailyProduct * Society.commodityPrice; // Share of today's social wealth (combined congealed labour of society)
 			}
 
 			this.hunger += this.dailyFoodRequired;
@@ -61,12 +61,12 @@ var Human = Vue.extend({
 		consume: function () {
 			var foodAvailable = Math.max(0, Society.commodityStock);
 			var foodWanted = Math.min(this.hunger, foodAvailable);
-			var foodAffordable = this.workingAge ? this.savings / Society.productivityAvg : foodWanted // Kids and pensioners don't pay for food
+			var foodAffordable = this.workingAge ? this.savings / Society.commodityPrice : foodWanted // Kids and pensioners don't pay for food
 			var foodToBuy = Math.min(foodAffordable, foodWanted)
 
 			Society.commodityStock -= foodToBuy;
 			this.hunger -= foodToBuy;
-			if(this.workingAge) this.savings -= foodToBuy * Society.productivityAvg;
+			if(this.workingAge) this.savings -= foodToBuy * Society.commodityPrice
 		},
 		improve: function() {
 			// # Overproducers should be able to improve easier (£ investment)

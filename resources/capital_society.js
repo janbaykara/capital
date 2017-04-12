@@ -57,6 +57,13 @@ var Society = new Vue({
 		productivityAvg: function() { // value of commodity
 			return _.meanBy(this.workingPopulation, 'productivityIndividual');
 		},
+		sociallyNecessaryLabourTime: function() {
+			// i.e. In 1hr, what is the social average number of commodities produced?
+			return 1 / this.productivityAvg;
+		},
+		commodityPrice: function() {
+			return this.productivityAvg;
+		},
 		dailyProductTotal: function() {
 			return _.sumBy(this.workingPopulation, 'dailyProduct');
 		},
@@ -76,8 +83,9 @@ var Society = new Vue({
 				dailyHunger: { value: this.dailyHunger, 						floor: 0, ceiling: 0 },
 				dailyFoodNeeded: { value: this.dailyFoodNeeded, 				floor: 0, ceiling: 0 },
 				averageWorkingDay: { value: this.averageWorkingDay, 			floor: 0, ceiling: 0 },
-				LabourPowerTotal: { value: this.LabourPowerTotal, 				floor: 0, ceiling: 0 },
+				productivityTotal: { value: this.productivityTotal, 			floor: 0, ceiling: 0 },
 				productivityAvg: { value: this.productivityAvg, 				floor: 0, ceiling: 0 },
+				commodityPrice: { value: this.commodityPrice, 					floor: 0, ceiling: 0 },
 				dailyProductTotal: { value: this.dailyProductTotal, 			floor: 0, ceiling: 0 },
 				dailyProductAvg: { value: this.dailyProductAvg, 				floor: 0, ceiling: 0 }
 			}
