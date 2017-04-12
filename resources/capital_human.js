@@ -33,7 +33,7 @@ var Human = Vue.extend({
 			if(!this.workingAge) return 0;
 			if(Society.equalHours) return this.hoursInDay;
 									// yesterday + today				  + family planning
-			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired + (this.reproductiveAge ? this.babyFoodAvg : 0)) * Society.commodityPrice;
+			var foodMoneyRequired = (this.hunger + this.dailyFoodRequired + (Society.lifecycle && this.reproductiveAge ? this.babyFoodAvg : 0)) * Society.commodityPrice;
 			return Math.min(Society.hoursWorkMax, Math.max(Society.hoursWorkMin, foodMoneyRequired / this.hourlyRelativeProduct ) );
 		},
 		hourlyRelativeProduct: function() {
