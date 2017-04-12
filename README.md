@@ -50,3 +50,17 @@ Mr 10hrs can't afford to survive with his time (which is limited!) in this indus
 - Political groups
 - Families
 - Genders
+
+### UI
+D3 charts for:
+- population growth
+- Life expectancy
+- Life expectancy by wealth at death
+- GDP growth
+- GDP per capita
+- Avg personal wealth
+- Wealth by age
+- Wealth by skill
+- Wealth by hunger
+- Productivity growth
+- GINI coefficient

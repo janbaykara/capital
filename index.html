@@ -10,7 +10,7 @@
 	<body>
 		<main id='society' class='pv4 ph5 center'>
 			<h1 class='mb0'><i>Capital</i></h1>
-			<div>
+			<div class='mb3'>
 				<a class='dib fr no-underline gray' href='https://github.com/janbaykara/capital'>project repository <span class='fa fa-github'></span> </a>
 				<span class='b'>Day {{day}}&nbsp;</span>
 				<span class='pointer fa' v-on:click='clockTicking ? clockPause() : clockStart()' v-bind:class="{'fa-pause': clockTicking, 'fa-play': !clockTicking}"></span>
@@ -19,71 +19,66 @@
 					<span class='speedOption pointer' v-bind:class="{black: ms == tickSpeed}" v-for='ms in speedOptions' v-on:click="changeTickSpeed(ms)">{{ms/1000}}s&nbsp;</span>
 				</span>
 			</div>
-			<!-- <div class='f3 mv3' v-if='banking'>{{averageWealth|£}} average wealth accumulated</div> -->
+
 			<div style='display: none;'>{{dailyFoodNeeded}}</div>
 			<!-- For the weirdest reason, the graphds don't display if dailyFoodNeeded isn't rendered above this line. -->
 
-			<!-- D3 charts for: -->
-			<!-- * population growth -->
-			<!-- * Life expectancy -->
-			<!-- * Life expectancy by wealth at death -->
-			<!-- * GDP growth -->
-			<!-- * GDP per capita -->
-			<!-- * Avg personal wealth -->
-			<!-- * Wealth by age -->
-			<!-- * Wealth by skill -->
-			<!-- * Wealth by hunger -->
-			<!-- * Productivity growth -->
-			<!-- * GINI coefficient -->
+			<a v-on:click='table = !table' class='dib pointer pa2 ba black-70 b'>{{table ? "Hide table" : "Show table"}}</a>
+			<a v-on:click='graphs = !graphs' class='dib pointer pa2 ba black-70 b'>{{graphs ? "Hide graphs" : "Show graphs"}}</a>
+			<a v-on:click='wholegraph = !wholegraph' class='dib pointer pa2 ba black-70 b'>{{wholegraph ? "Last 30 days" : "All-time data" }}</a>
 
-			<div class='fl w-third mv3 pr2'>
-				<div>
-					<div class='f4 b'>Commodities</div>
-					<div class='f5'>{{commodityStock|d(0)}} surplus</div>
-					<div class='f5'>Avg of {{commodityStock/currentPopulation.length|d(0)}} commodities per person</div>
-					<area-chart class='mt1 ' :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' style='width: 100%; height: 150px;'></area-chart>
-				</div>
-				<div class='bt b--light-gray mv2'></div>
-				<div>
-					<div class='f4 b'>Commodity price</div>
-					<div class='f5'>{{commodityPrice|d(2)}}</div>
-					<area-chart class='mt1 ' :stats='statistics.commodityPrice' :ceil='statSets.commodityPrice.ceiling' :floor='statSets.commodityPrice.floor' style='width: 100%; height: 150px;'></area-chart>
-				</div>
-			</div>
-
-			<div class='fl w-third mv3 twocharts bl br ph2 b--light-gray'>
-				<div class='f4 b'>Production &amp; Consumption</div>
-				<div class='f5'>{{dailyProductTotal|d(0)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
-				<div class='f5'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
-				<div class='mv1 chartContrast relative' style='width: 100%; height: 321px;'>
-					<area-chart class='absolute ' :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling' style='width: 100%; height: 321px;'></area-chart>
-					<area-chart class='absolute ' :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' style='width: 100%; height: 321px;'></area-chart>
-				</div>
-				<div class='f5'>{{dailyFoodNeeded|d(0)}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
-				<div class='f5'>{{dailyHunger|d(0)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
-			</div>
-
-			<div class='fl w-third mv3 pl2'>
-				<div>
-					<div class='f4 b'>{{currentPopulation.length}} humans</div>
-					<div class='f5' v-if='lifecycle'>Average age {{averageAge|d(0)}}, {{averageOffspring|d(2)}} kids per person</div>
-					<div class='mv1 chartSubcategories relative' style='width: 100%; height: 150px;'>
-						<area-chart class=' absolute' :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling' style='width: 100%; height: 150px;'></area-chart>
-						<area-chart class=' absolute' :stats='statistics.workingPopulation' :ceil='statSets.currentPopulation.ceiling' style='width: 100%; height: 150px;'></area-chart>
+			<br class='cf'>
+			<div v-if='graphs'>
+				<div class='fl w-third mv3 pr2'>
+					<div>
+						<div class='f4 b'>Commodities</div>
+						<div class='f5'>{{commodityStock|d(0)}} surplus</div>
+						<div class='f5'>Avg of {{commodityStock/currentPopulation.length|d(0)}} commodities per person</div>
+						<area-chart :wholegraph='wholegraph' class='mt1 ' :stats='statistics.commodityStock' :ceil='statSets.commodityStock.ceiling' style='width: 100%; height: 150px;'></area-chart>
 					</div>
-					<div class='f5' v-if='lifecycle'>{{workingPopulation.length/currentPopulation.length|%(0)}} working population</div>
+					<div class='bt b--light-gray mv2'></div>
+					<div>
+						<div class='f4 b'>Commodity price</div>
+						<div class='f5'>{{commodityPrice|v}} (Labour Time Socially Necessary)</div>
+						<area-chart :wholegraph='wholegraph' class='mt1 ' :stats='statistics.commodityPrice' :ceil='statSets.commodityPrice.ceiling' :floor='statSets.commodityPrice.floor' style='width: 100%; height: 150px;'></area-chart>
+					</div>
 				</div>
-				<div class='bt b--light-gray mv2'></div>
-				<div>
-					<div class='f4 b'>Avg Productivity</div>
-					<div class='f5'>{{productivityAvg|d(2)}} commodities/hr</div>
-					<area-chart class='mt1 ' :stats='statistics.productivityAvg' :ceil='statSets.productivityAvg.ceiling' :floor='statSets.productivityAvg.floor' style='width: 100%; height: 150px;'></area-chart>
+
+				<div class='fl w-third mv3 twocharts bl br ph2 b--light-gray'>
+					<div class='f4 b'>Production &amp; Consumption</div>
+					<div class='f5'>{{dailyProductTotal|d(0)}} daily production ({{dailyProductTotal/dailyFoodNeeded|%(1)}} of required)</div>
+					<div class='f5'>{{dailyProductAvg|d(1)}} avg daily production per person</div>
+					<div class='mv1 chartContrast relative' style='width: 100%; height: 321px;'>
+						<area-chart :wholegraph='wholegraph' class='absolute ' :stats='statistics.dailyProductTotal' :ceil='statSets.dailyProductTotal.ceiling' style='width: 100%; height: 321px;'></area-chart>
+						<area-chart :wholegraph='wholegraph' class='absolute ' :stats='statistics.dailyFoodNeeded' :ceil='statSets.dailyProductTotal.ceiling' style='width: 100%; height: 321px;'></area-chart>
+					</div>
+					<div class='f5'>{{dailyFoodNeeded|d(0)}} daily required ({{dailyFoodNeeded/dailyProductTotal|%(1)}} of capacity)</div>
+					<div class='f5'>{{dailyHunger|d(0)}} outstanding hunger ({{averageHunger|d(1)}}% avg)</div>
+				</div>
+
+				<div class='fl w-third mv3 pl2'>
+					<div>
+						<div class='f4 b'>{{currentPopulation.length}} humans</div>
+						<div class='f5' v-if='lifecycle'>Average age {{averageAge|d(0)}}, {{averageOffspring|d(2)}} kids per person</div>
+						<div class='mv1 chartSubcategories relative' style='width: 100%; height: 150px;'>
+							<area-chart :wholegraph='wholegraph' class=' absolute' :stats='statistics.currentPopulation' :ceil='statSets.currentPopulation.ceiling' style='width: 100%; height: 150px;'></area-chart>
+							<area-chart :wholegraph='wholegraph' class=' absolute' :stats='statistics.workingPopulation' :ceil='statSets.currentPopulation.ceiling' style='width: 100%; height: 150px;'></area-chart>
+						</div>
+						<div class='f5' v-if='lifecycle'>{{workingPopulation.length/currentPopulation.length|%(0)}} working population</div>
+					</div>
+					<div class='bt b--light-gray mv2'></div>
+					<div>
+						<div class='f4 b'>Avg Productivity</div>
+						<div class='f5'>{{productivityAvg|d(2)}} commodities/hr</div>
+						<area-chart :wholegraph='wholegraph' class='mt1 ' :stats='statistics.productivityAvg' :ceil='statSets.productivityAvg.ceiling' :floor='statSets.productivityAvg.floor' style='width: 100%; height: 150px;'></area-chart>
+					</div>
 				</div>
 			</div>
 
 			<br class='cf'>
 			<br>
-			<table class='population f6' cellpadding="0" cellspacing="0">
+			<br>
+			<table class='population f6' cellpadding="0" cellspacing="0" v-if='table'>
 				<tr v-for="person in currentPopulation"
 					v-on:click="person.isHighlighted = !person.isHighlighted"
 					v-bind:class="{ highlighted: person.isHighlighted, hungry: person.hunger > 0.01, lazy: person.productivityIndividual < productivityAvg, poor: person.savings < 0.01, young: person.age < person.agePuberty, old: person.age >= person.ageLimit, unemployed: person.hoursWorked < 0.1, overworked: person.hoursWorked == hoursWorkMax, dead: !person.alive }">

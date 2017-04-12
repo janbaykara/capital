@@ -23,6 +23,10 @@ Vue.component('area-chart', {
 			type: Number,
 			default: 0
 		},
+		wholegraph: {
+			type: Boolean,
+			default: true,
+		}
 	},
 	data() {
 		return {
@@ -38,7 +42,7 @@ Vue.component('area-chart', {
 				x: null,
 				y: null,
 			},
-			points: [],
+			points: []
 		};
 	},
 	computed: {
@@ -47,6 +51,9 @@ Vue.component('area-chart', {
 			const height = this.height - this.margin.top - this.margin.bottom;
 			return { width, height };
 		},
+		theData() {
+			return this.wholegraph ? this.stats : this.stats.slice(-30)
+		}
 	},
 	mounted() {
 		window.addEventListener('resize', this.onResize);
@@ -63,6 +70,11 @@ Vue.component('area-chart', {
 				this.update();
 			},
 			deep: true
+		},
+		wholegraph: function scopeChanged(newData, oldData) {
+			console.log(this.wholegraph,newData);
+			this.initialize();
+			this.update();
 		},
 		width: function widthChanged() {
 			this.initialize();
@@ -84,10 +96,10 @@ Vue.component('area-chart', {
 			d3.axisBottom().scale(this.scaled.y);
 		},
 		update() {
-			this.scaled.x.domain(d3.extent(this.stats, (d, i) => i));
+			this.scaled.x.domain(d3.extent(this.theData, (d, i) => i));
 			this.scaled.y.domain([this.floor, this.ceil]);
 			this.points = [];
-			for (const [i, d] of this.stats.entries()) {
+			for (const [i, d] of this.theData.entries()) {
 				this.points.push({
 					x: this.scaled.x(i),
 					y: this.scaled.y(d),
@@ -104,7 +116,7 @@ Vue.component('area-chart', {
 				if (this.lastHoverPoint.index !== closestPoint.index) {
 					const point = this.points[closestPoint.index];
 					this.paths.selector = this.createValueSelector([point]);
-					this.$emit('select', this.stats[closestPoint.index]);
+					this.$emit('select', this.theData[closestPoint.index]);
 					this.lastHoverPoint = closestPoint;
 				}
 			}

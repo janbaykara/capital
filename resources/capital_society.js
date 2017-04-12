@@ -1,6 +1,10 @@
 var Society = new Vue({
 	el: '#society',
 	data: {
+		// UI
+		table: true,
+		graphs: true,
+		wholegraph: true,
 		// config
 		lifecycle: true,
 		inheritance: false,
@@ -114,8 +118,8 @@ var Society = new Vue({
 					}
 
 					this.statistics[category].push(this.statSets[category].value);
-					this.statSets[category].floor = Math.min.apply(null, this.statistics[category]);
-					this.statSets[category].ceiling = Math.max.apply(null, this.statistics[category]);
+					this.statSets[category].floor = Math.min.apply(null, this.wholegraph ? this.statistics[category] : this.statistics[category].slice(-30));
+					this.statSets[category].ceiling = Math.max.apply(null, this.wholegraph ? this.statistics[category] : this.statistics[category].slice(-30));
 				}
 			}
 		},
