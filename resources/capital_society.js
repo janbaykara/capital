@@ -66,7 +66,7 @@ var Society = new Vue({
 			return 1 / this.productivityAvg;
 		},
 		commodityPrice: function() {
-			return this.productivityAvg;
+			return this.sociallyNecessaryLabourTime;
 		},
 		dailyProductTotal: function() {
 			return _.sumBy(this.workingPopulation, 'dailyProduct');
