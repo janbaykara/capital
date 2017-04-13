@@ -28,9 +28,19 @@ var UI = new Vue({
 	el: '#society',
 	data: {
 		// UI
-		table: true,
-		graphs: true,
-		wholegraph: true,
+		table: false,
+		graphs: false,
+		wholegraph: false,
+		logging: false,
+		// config
+		lifecycle: true,
+		inheritance: false,
+		banking: false,
+		equalHours: false,
+		catastrophes: false,
+		// time
+		day: 0,
+		tickSpeed: 500,
 		speedOptions: [1000,500,250,100,10,1],
 		// runtime
 		statistics: {},
@@ -55,23 +65,24 @@ var UI = new Vue({
 		});
 
 		this.synchronise();
+		this.syncRequest('updateProperty','logging',this.logging);
 	},
 	methods: {
 		synchronise: function() {
 			var Society = this;
 			this.societyEngine.addEventListener('message', function(e) {
 				var sentData = e.data;
-				console.log("[ENGINE] received "+sentData[0]+" request:",sentData);
+				if(this.logging) console.log("[UI] received "+sentData[0]+" request:",sentData);
 				switch(sentData[0]) {
 					case 'doFunction':
-						console.log("[WORKER] Doing function `"+sentData[1]+"`"); Society[sentData[1]](sentData[2]); break;
+						if(this.logging) console.log("[UI] Doing function `"+sentData[1]+"`"); Society[sentData[1]](sentData[2]); break;
 					case 'updateProperty':
-						console.log("[WORKER] Changing property `"+sentData[1]+"`"); Vue.set(Society, sentData[1], sentData[2]);
+						if(this.logging) console.log("[UI] Changing property `"+sentData[1]+"`"); Vue.set(Society, sentData[1], sentData[2]);
 				}
 			}, false);
 		},
 		syncRequest: function(type,prop,val) {
-			console.log("[UI] Requesting ENGINE to `"+type+"`", prop, val);
+			if(this.logging) console.log("[UI] Requesting ENGINE to `"+type+"`", prop, val);
 			this.societyEngine.postMessage([type,prop,val]);
 		},
 		clockStart: function(message) {
@@ -82,6 +93,9 @@ var UI = new Vue({
 		},
 		changeTickSpeed: function(value) {
 			this.syncRequest('doFunction','changeTickSpeed',value);
+		},
+		current: function (value) {
+		    return value.values.slice(-1) || 0;
 		}
 	}
 });

@@ -1,5 +1,6 @@
 var Society = new Vue({
 	data: {
+		logging: false,
 		// config
 		lifecycle: true,
 		inheritance: false,
@@ -90,24 +91,31 @@ var Society = new Vue({
 		}
 	},
 	created: function() {
-		this.synchronise()
+		this.synchronise();
+
+		// Sync config
+		this.syncRequest('updateProperty','lifecycle',this.lifecycle);
+		this.syncRequest('updateProperty','inheritance',this.inheritance);
+		this.syncRequest('updateProperty','banking',this.banking);
+		this.syncRequest('updateProperty','equalHours',this.equalHours);
+		this.syncRequest('updateProperty','catastrophes',this.catastrophes);
 	},
 	methods: {
 		synchronise: function() {
 			var Society = this;
 			self.addEventListener('message', function(e) {
 				var sentData = e.data;
-				console.log("[ENGINE] received "+sentData[0]+" request:",sentData);
+				if(this.logging) console.log("[ENGINE] received "+sentData[0]+" request:",sentData);
 				switch(sentData[0]) {
 					case 'doFunction':
-						console.log("[ENGINE] Doing function `"+sentData[1]+"`"); Society[sentData[1]](sentData[2]); break;
+						if(this.logging) console.log("[ENGINE] Doing function `"+sentData[1]+"`"); Society[sentData[1]](sentData[2]); break;
 					case 'updateProperty':
-						console.log("[ENGINE] Changing property `"+sentData[1]+"`"); Vue.set(Society, sentData[1], sentData[2]);
+						if(this.logging) console.log("[ENGINE] Changing property `"+sentData[1]+"`"); Vue.set(Society, sentData[1], sentData[2]);
 				}
 			}, false);
 		},
 		syncRequest: function(type,prop,val) {
-			console.log("[ENGINE] Requesting UI to `"+type+"`", prop, val);
+			if(this.logging) console.log("[ENGINE] Requesting UI to `"+type+"`", prop, val);
 			self.postMessage([type,prop,val]);
 		},
 		recordHistory: function() {
@@ -144,6 +152,7 @@ var Society = new Vue({
 		},
 		changeTickSpeed: function(value) {
 			this.tickSpeed = value;
+			this.syncRequest('updateProperty','tickSpeed',JSON.parse(JSON.stringify(value)));
 			this.clockPause("Clock set to "+value+"ms per tick");
 			this.clockStart();
 		},
@@ -158,6 +167,7 @@ var Society = new Vue({
 			console.group("Day "+this.day,this.productivityAvg);
 
 			this.day++;
+			this.syncRequest('updateProperty','day',JSON.parse(JSON.stringify(this.$data.day)));
 
 			this.currentPopulation.forEach(function(person) {
 				person.live();
