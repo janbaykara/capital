@@ -1,10 +1,5 @@
 var Society = new Vue({
-	el: '#society',
 	data: {
-		// UI
-		table: true,
-		graphs: true,
-		wholegraph: true,
 		// config
 		lifecycle: true,
 		inheritance: false,
@@ -16,7 +11,6 @@ var Society = new Vue({
 		clock: null,
 		clockTicking: false,
 		tickSpeed: 500,
-		speedOptions: [1000,500,250,100,10,1],
 		// runtime
 		population: [],
 		commodityStock: 0,
@@ -76,65 +70,76 @@ var Society = new Vue({
 		},
 		statSets: function() {
 			return {
-				commodityStock: { value: this.commodityStock, 					floor: 0, ceiling: 0 },
-				population: { value: this.population.length, 					floor: 0, ceiling: 0 },
-				currentPopulation: { value: this.currentPopulation.length, 		floor: 0, ceiling: 0 },
-				workingPopulation: { value: this.workingPopulation.length, 		floor: 0, ceiling: 0 },
-				averageOffspring: { value: this.averageOffspring, 				floor: 0, ceiling: 0 },
-				averageAge: { value: this.averageAge, 							floor: 0, ceiling: 0 },
-				averageWealth: { value: this.averageWealth, 					floor: 0, ceiling: 0 },
-				averageHunger: { value: this.averageHunger, 					floor: 0, ceiling: 0 },
-				dailyHunger: { value: this.dailyHunger, 						floor: 0, ceiling: 0 },
-				dailyFoodNeeded: { value: this.dailyFoodNeeded, 				floor: 0, ceiling: 0 },
-				averageWorkingDay: { value: this.averageWorkingDay, 			floor: 0, ceiling: 0 },
-				productivityTotal: { value: this.productivityTotal, 			floor: 0, ceiling: 0 },
-				productivityAvg: { value: this.productivityAvg, 				floor: 0, ceiling: 0 },
-				commodityPrice: { value: this.commodityPrice, 					floor: 0, ceiling: 0 },
-				dailyProductTotal: { value: this.dailyProductTotal, 			floor: 0, ceiling: 0 },
-				dailyProductAvg: { value: this.dailyProductAvg, 				floor: 0, ceiling: 0 }
+				commodityStock: this.commodityStock,
+				population: this.population.length,
+				currentPopulation: this.currentPopulation.length,
+				workingPopulation: this.workingPopulation.length,
+				averageOffspring: this.averageOffspring,
+				averageAge: this.averageAge,
+				averageWealth: this.averageWealth,
+				averageHunger: this.averageHunger,
+				dailyHunger: this.dailyHunger,
+				dailyFoodNeeded: this.dailyFoodNeeded,
+				averageWorkingDay: this.averageWorkingDay,
+				productivityTotal: this.productivityTotal,
+				productivityAvg: this.productivityAvg,
+				commodityPrice: this.commodityPrice,
+				dailyProductTotal: this.dailyProductTotal,
+				dailyProductAvg: this.dailyProductAvg,
 			}
 		}
 	},
 	created: function() {
-		this.clockStart("In the beginning...");
-
-		window.addEventListener('keypress', function(event) {
-			if (event.keyCode == 32) {
-				event.preventDefault();
-				if(Society.clockTicking)
-					Society.clockPause()
-				else
-					Society.clockStart()
-			}
-		});
+		this.synchronise()
 	},
 	methods: {
+		synchronise: function() {
+			var Society = this;
+			self.addEventListener('message', function(e) {
+				var sentData = e.data;
+				console.log("[ENGINE] received "+sentData[0]+" request:",sentData);
+				switch(sentData[0]) {
+					case 'doFunction':
+						console.log("[ENGINE] Doing function `"+sentData[1]+"`"); Society[sentData[1]](sentData[2]); break;
+					case 'updateProperty':
+						console.log("[ENGINE] Changing property `"+sentData[1]+"`"); Vue.set(Society, sentData[1], sentData[2]);
+				}
+			}, false);
+		},
+		syncRequest: function(type,prop,val) {
+			console.log("[ENGINE] Requesting UI to `"+type+"`", prop, val);
+			self.postMessage([type,prop,val]);
+		},
 		recordHistory: function() {
 			for (var category in this.statSets) {
-				if (this.statSets.hasOwnProperty(category) && typeof this.statSets[category].value == 'number' && !isNaN(this.statSets[category].value)) {
+				if (this.statSets.hasOwnProperty(category) && typeof this.statSets[category] == 'number' && !isNaN(this.statSets[category])) {
 					if(!this.statistics[category]) {
-						Vue.set(this.statistics, category, []);
-						this.statSets[category].name = category;
+						Vue.set(this.statistics, category, {});
+						Vue.set(this.statistics[category], 'values', []);
+						this.statistics[category].name = category;
 					}
 
-					this.statistics[category].push(this.statSets[category].value);
-					this.statSets[category].floor = Math.min.apply(null, this.wholegraph ? this.statistics[category] : this.statistics[category].slice(-30));
-					this.statSets[category].ceiling = Math.max.apply(null, this.wholegraph ? this.statistics[category] : this.statistics[category].slice(-30));
+					this.statistics[category].values.push(this.statSets[category]);
+					this.statistics[category].floor = Math.min.apply(null, this.wholegraph ? this.statistics[category].values : this.statistics[category].values.slice(-30));
+					this.statistics[category].ceiling = Math.max.apply(null, this.wholegraph ? this.statistics[category].values : this.statistics[category].values.slice(-30));
 				}
 			}
 		},
 		clockStart: function(message) {
+			var Society = this;
 			if(this.clock && this.currentPopulation.length == 0) return false; // Give up already...
 
 			this.clock = setInterval(function() {
 				Society.newDay();
 			}, this.tickSpeed);
 			this.clockTicking = true;
+			this.syncRequest('updateProperty','clockTicking',true);
 			if(message) console.log("Clock starts at Day "+this.day+": "+message);
 		},
 		clockPause: function(message) {
 			clearInterval(this.clock);
 			this.clockTicking = false;
+			this.syncRequest('updateProperty','clockTicking',false);
 			if(message) console.log("Clock paused at Day "+this.day+": "+message);
 		},
 		changeTickSpeed: function(value) {
@@ -163,6 +168,8 @@ var Society = new Vue({
 			}
 
 			this.recordHistory();
+
+			this.syncRequest('updateProperty','statistics',JSON.parse(JSON.stringify(this.$data.statistics)));
 		},
 		catastrophe: function() {
 			console.log("We're all gonna die!")
