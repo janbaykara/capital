@@ -29,7 +29,7 @@ var UI = new Vue({
 	data: {
 		// UI
 		table: false,
-		graphs: false,
+		graphs: true,
 		wholegraph: false,
 		logging: false,
 		// config
@@ -50,7 +50,7 @@ var UI = new Vue({
 	},
 	watch: {
 		wholegraph: function() {
-			this.societyEngine.postMessage(['updateProperty','wholegraph',wholegraph]);
+			this.societyEngine.postMessage(['updateProperty','wholegraph',this.wholegraph]);
 		}
 	},
 	created: function() {
@@ -66,6 +66,7 @@ var UI = new Vue({
 
 		this.synchronise();
 		this.syncRequest('updateProperty','logging',this.logging);
+		this.syncRequest('updateProperty','wholegraph',this.wholegraph);
 	},
 	methods: {
 		synchronise: function() {
@@ -95,7 +96,7 @@ var UI = new Vue({
 			this.syncRequest('doFunction','changeTickSpeed',value);
 		},
 		current: function (value) {
-		    return value.values.slice(-1) || 0;
+		    return Number(value.values.slice(-1));
 		}
 	}
 });

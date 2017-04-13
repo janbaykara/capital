@@ -1,6 +1,7 @@
 var Society = new Vue({
 	data: {
 		logging: false,
+		wholegraph: false,
 		// config
 		lifecycle: true,
 		inheritance: false,
@@ -100,6 +101,16 @@ var Society = new Vue({
 		this.syncRequest('updateProperty','equalHours',this.equalHours);
 		this.syncRequest('updateProperty','catastrophes',this.catastrophes);
 	},
+	watch: {
+		wholegraph: function() {
+			console.log("[ENGINE] Recalculating min/max")
+			for (var category in this.statSets) {
+				this.statistics[category].floor = Math.min.apply(null, this.wholegraph ? this.statistics[category].values : this.statistics[category].values.slice(-30));
+				this.statistics[category].ceiling = Math.max.apply(null, this.wholegraph ? this.statistics[category].values : this.statistics[category].values.slice(-30));
+			}
+			this.syncHistory();
+		}
+	},
 	methods: {
 		synchronise: function() {
 			var Society = this;
@@ -132,6 +143,10 @@ var Society = new Vue({
 					this.statistics[category].ceiling = Math.max.apply(null, this.wholegraph ? this.statistics[category].values : this.statistics[category].values.slice(-30));
 				}
 			}
+			this.syncHistory();
+		},
+		syncHistory: function() {
+			this.syncRequest('updateProperty','statistics',JSON.parse(JSON.stringify(this.$data.statistics)));
 		},
 		clockStart: function(message) {
 			var Society = this;
@@ -178,8 +193,6 @@ var Society = new Vue({
 			}
 
 			this.recordHistory();
-
-			this.syncRequest('updateProperty','statistics',JSON.parse(JSON.stringify(this.$data.statistics)));
 		},
 		catastrophe: function() {
 			console.log("We're all gonna die!")

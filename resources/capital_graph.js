@@ -25,7 +25,7 @@ Vue.component('area-chart', {
 		},
 		wholegraph: {
 			type: Boolean,
-			default: true,
+			default: false,
 		}
 	},
 	data() {
@@ -72,7 +72,7 @@ Vue.component('area-chart', {
 			deep: true
 		},
 		wholegraph: function scopeChanged(newData, oldData) {
-			console.log(this.wholegraph,newData);
+			console.log("[GRAPHER] WholeGraph is now:"+newData);
 			this.initialize();
 			this.update();
 		},
