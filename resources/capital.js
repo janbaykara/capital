@@ -4,3 +4,5 @@ for(var i = 1, x = 20; i <= x; i++) {
 	thisBaby.age = _.random(16, 75);
 	Society.population.push(thisBaby);
 }
+
+Society.clockStart("In the beginning...");
